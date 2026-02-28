@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bb-black: #0a0a0a;
+  --color-bb-dark: #121212;
+  --color-bb-panel: #1a1a1a;
+  --color-bb-border: #2a2a2a;
+  --color-bb-header: #1e1e1e;
+  --color-bb-green: #00d26a;
+  --color-bb-red: #ff3b3b;
+  --color-bb-orange: #ff8c00;
+  --color-bb-yellow: #ffd700;
+  --color-bb-blue: #4a9eff;
+  --color-bb-cyan: #00e5ff;
+  --color-bb-white: #e0e0e0;
+  --color-bb-muted: #6a6a6a;
+  --color-bb-amber: #ffbf00;
+  --font-family-mono: 'Consolas', 'SF Mono', 'Fira Code', 'Monaco', monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-bb-black);
+  color: var(--color-bb-white);
+  font-family: var(--font-family-mono);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bb-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-bb-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-bb-muted);
+}
+
+.bb-panel {
+  background: var(--color-bb-panel);
+  border: 1px solid var(--color-bb-border);
+  border-radius: 2px;
+}
+
+.bb-panel-header {
+  background: var(--color-bb-header);
+  border-bottom: 1px solid var(--color-bb-border);
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-bb-amber);
+}
+
+.positive { color: var(--color-bb-green); }
+.negative { color: var(--color-bb-red); }
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+.bb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.bb-table th {
+  text-align: left;
+  padding: 3px 8px;
+  color: var(--color-bb-amber);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--color-bb-border);
+  white-space: nowrap;
+}
+
+.bb-table td {
+  padding: 3px 8px;
+  border-bottom: 1px solid var(--color-bb-border);
+  white-space: nowrap;
+}
+
+.bb-table tr:hover {
+  background: rgba(74, 158, 255, 0.05);
+}
+
+.recharts-text {
+  font-family: var(--font-family-mono) !important;
+  font-size: 10px !important;
+}
+
+.recharts-cartesian-grid line {
+  stroke: var(--color-bb-border) !important;
+}
