@@ -16,7 +16,7 @@ export const tabs = [
   { id: 'watchlist', label: 'WATCHLIST', shortcut: null },
   { id: 'screener', label: 'SCREENER', shortcut: null },
   { id: 'technicals', label: 'TECHNICALS', shortcut: null },
-  { id: 'fundamentals', label: 'FUNDAMENTALS', shortcut: null },
+  { id: 'fundamentals', label: 'ANALYSIS', shortcut: null },
   { id: 'sectors', label: 'SECTORS', shortcut: null },
   { id: 'heatmap', label: 'HEAT MAP', shortcut: null },
   { id: 'alerts', label: 'ALERTS', shortcut: null },
