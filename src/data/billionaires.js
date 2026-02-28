@@ -1,0 +1,14 @@
+export const billionaires = [
+  { name: 'Elon Musk', netWorth: 232.4, company: 'Tesla/SpaceX', source: 'Electric Vehicles, Space', ytdChange: 12.4, country: 'US' },
+  { name: 'Bernard Arnault', netWorth: 186.2, company: 'LVMH', source: 'Luxury Goods', ytdChange: -5.2, country: 'France' },
+  { name: 'Jeff Bezos', netWorth: 177.5, company: 'Amazon', source: 'E-Commerce, Cloud Computing', ytdChange: 8.1, country: 'US' },
+  { name: 'Mark Zuckerberg', netWorth: 162.8, company: 'Meta Platforms', source: 'Social Media, Advertising', ytdChange: 48.2, country: 'US' },
+  { name: 'Larry Ellison', netWorth: 145.2, company: 'Oracle', source: 'Enterprise Software, Cloud', ytdChange: 22.6, country: 'US' },
+  { name: 'Warren Buffett', netWorth: 128.7, company: 'Berkshire Hathaway', source: 'Diversified Investments', ytdChange: 8.4, country: 'US' },
+  { name: 'Bill Gates', netWorth: 124.8, company: 'Microsoft / Gates Ventures', source: 'Software, Investments', ytdChange: 4.2, country: 'US' },
+  { name: 'Mukesh Ambani', netWorth: 98.4, company: 'Reliance Industries', source: 'Petrochemicals, Telecom', ytdChange: 6.8, country: 'India' },
+  { name: 'Prince Alwaleed bin Talal', netWorth: 18.2, company: 'Kingdom Holding', source: 'Diversified Investments', ytdChange: 2.4, country: 'Saudi Arabia' },
+  { name: 'Hussain Sajwani', netWorth: 7.8, company: 'DAMAC Properties', source: 'Real Estate Development', ytdChange: 18.5, country: 'UAE' },
+  { name: 'Nassef Sawiris', netWorth: 8.6, company: 'OCI / Adidas', source: 'Construction, Chemicals', ytdChange: -3.1, country: 'Egypt' },
+  { name: 'Mohammed Al Amoudi', netWorth: 8.1, company: 'Corral Petroleum / MIDROC', source: 'Oil, Diversified', ytdChange: 1.2, country: 'Saudi Arabia' },
+];
