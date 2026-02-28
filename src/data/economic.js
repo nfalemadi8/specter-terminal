@@ -12,15 +12,32 @@ export const economicIndicators = [
 ];
 
 export const economicCalendar = [
-  { date: 'Mon', time: '08:30', event: 'Retail Sales MoM', country: 'US', impact: 'high', forecast: '0.2%', previous: '0.3%' },
-  { date: 'Mon', time: '10:00', event: 'Business Inventories', country: 'US', impact: 'low', forecast: '0.2%', previous: '0.4%' },
-  { date: 'Tue', time: '08:30', event: 'Housing Starts', country: 'US', impact: 'medium', forecast: '1.35M', previous: '1.37M' },
-  { date: 'Tue', time: '09:15', event: 'Industrial Production', country: 'US', impact: 'medium', forecast: '0.1%', previous: '-0.6%' },
-  { date: 'Wed', time: '14:00', event: 'FOMC Minutes', country: 'US', impact: 'high', forecast: '-', previous: '-' },
-  { date: 'Thu', time: '08:30', event: 'Initial Jobless Claims', country: 'US', impact: 'high', forecast: '215K', previous: '202K' },
-  { date: 'Thu', time: '10:00', event: 'Existing Home Sales', country: 'US', impact: 'medium', forecast: '3.78M', previous: '3.79M' },
-  { date: 'Fri', time: '09:45', event: 'S&P PMI Manufacturing', country: 'US', impact: 'high', forecast: '49.5', previous: '49.4' },
-  { date: 'Fri', time: '10:00', event: 'Consumer Sentiment', country: 'US', impact: 'medium', forecast: '70.0', previous: '69.7' },
+  // US Events
+  { date: 'Mon', time: '08:30', event: 'Retail Sales MoM', country: 'US', impact: 'high', forecast: '0.2%', previous: '0.3%', region: 'US' },
+  { date: 'Mon', time: '10:00', event: 'Business Inventories', country: 'US', impact: 'low', forecast: '0.2%', previous: '0.4%', region: 'US' },
+  { date: 'Tue', time: '08:30', event: 'Housing Starts', country: 'US', impact: 'medium', forecast: '1.35M', previous: '1.37M', region: 'US' },
+  { date: 'Tue', time: '09:15', event: 'Industrial Production', country: 'US', impact: 'medium', forecast: '0.1%', previous: '-0.6%', region: 'US' },
+  { date: 'Wed', time: '14:00', event: 'FOMC Minutes', country: 'US', impact: 'high', forecast: '-', previous: '-', region: 'US' },
+  { date: 'Thu', time: '08:30', event: 'Initial Jobless Claims', country: 'US', impact: 'high', forecast: '215K', previous: '202K', region: 'US' },
+  { date: 'Thu', time: '10:00', event: 'Existing Home Sales', country: 'US', impact: 'medium', forecast: '3.78M', previous: '3.79M', region: 'US' },
+  { date: 'Fri', time: '09:45', event: 'S&P PMI Manufacturing', country: 'US', impact: 'high', forecast: '49.5', previous: '49.4', region: 'US' },
+  { date: 'Fri', time: '10:00', event: 'Consumer Sentiment', country: 'US', impact: 'medium', forecast: '70.0', previous: '69.7', region: 'US' },
+  // EU Events
+  { date: 'Thu', time: '07:45', event: 'ECB Rate Decision', country: 'EU', impact: 'high', forecast: '4.50%', previous: '4.50%', region: 'EU' },
+  { date: 'Fri', time: '05:00', event: 'EU CPI Flash Estimate YoY', country: 'EU', impact: 'high', forecast: '2.8%', previous: '2.9%', region: 'EU' },
+  // UK Events
+  { date: 'Thu', time: '07:00', event: 'BoE Rate Decision', country: 'GB', impact: 'high', forecast: '5.25%', previous: '5.25%', region: 'UK' },
+  { date: 'Fri', time: '02:00', event: 'UK GDP QoQ', country: 'GB', impact: 'high', forecast: '0.1%', previous: '-0.1%', region: 'UK' },
+  // Japan Events
+  { date: 'Tue', time: '23:00', event: 'BoJ Rate Decision', country: 'JP', impact: 'high', forecast: '-0.10%', previous: '-0.10%', region: 'JP' },
+  { date: 'Wed', time: '19:30', event: 'Japan CPI YoY', country: 'JP', impact: 'medium', forecast: '2.8%', previous: '3.0%', region: 'JP' },
+  // China Events
+  { date: 'Mon', time: '21:30', event: 'China CPI YoY', country: 'CN', impact: 'high', forecast: '-0.3%', previous: '-0.5%', region: 'CN' },
+  { date: 'Wed', time: '21:00', event: 'China Industrial Production YoY', country: 'CN', impact: 'medium', forecast: '6.8%', previous: '6.6%', region: 'CN' },
+  // GCC Events
+  { date: 'Tue', time: '09:00', event: 'Qatar GDP QoQ', country: 'QA', impact: 'medium', forecast: '1.8%', previous: '1.5%', region: 'QA' },
+  { date: 'Wed', time: '09:00', event: 'UAE PMI', country: 'AE', impact: 'medium', forecast: '56.4', previous: '56.1', region: 'AE' },
+  { date: 'Mon', time: '09:00', event: 'Saudi Arabia PMI', country: 'SA', impact: 'medium', forecast: '57.2', previous: '57.5', region: 'AE' },
 ];
 
 export const earningsCalendar = [

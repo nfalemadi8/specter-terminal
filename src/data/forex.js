@@ -11,6 +11,10 @@ export const forexPairs = [
   { pair: 'GBP/JPY', bid: 189.94, ask: 189.98, change: 0.82, changePct: 0.43, high: 190.38, low: 189.05 },
   { pair: 'USD/CNH', bid: 7.2485, ask: 7.2495, change: 0.0082, changePct: 0.11, high: 7.2545, low: 7.2388 },
   { pair: 'USD/MXN', bid: 17.245, ask: 17.248, change: -0.042, changePct: -0.24, high: 17.312, low: 17.218 },
+  // GCC Pairs
+  { pair: 'USD/QAR', bid: 3.6400, ask: 3.6405, change: 0.0001, changePct: 0.00, high: 3.6410, low: 3.6395 },
+  { pair: 'USD/AED', bid: 3.6725, ask: 3.6730, change: 0.0000, changePct: 0.00, high: 3.6735, low: 3.6720 },
+  { pair: 'USD/SAR', bid: 3.7500, ask: 3.7505, change: 0.0001, changePct: 0.00, high: 3.7510, low: 3.7495 },
 ];
 
 export const cryptoPairs = [
