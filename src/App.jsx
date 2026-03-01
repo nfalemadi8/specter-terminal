@@ -1,6 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { tabs } from './data/tabs';
 import Header from './components/layout/Header';
+import MarketClock from './components/layout/MarketClock';
 import TickerBar from './components/layout/TickerBar';
 import TabBar from './components/layout/TabBar';
 import CommandBar from './components/layout/CommandBar';
@@ -104,6 +105,7 @@ export default function App() {
         Skip to content
       </a>
       <Header />
+      <MarketClock />
       <TickerBar />
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
       <main id="main-content" role="tabpanel" aria-live="polite" className="flex-1 overflow-auto sm:overflow-hidden">
