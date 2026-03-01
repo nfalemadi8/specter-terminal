@@ -1,6 +1,7 @@
-import { memo } from 'react';
+import { useState, memo, useMemo } from 'react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import Panel from '../layout/Panel';
-import { formatNumber, formatPercent, formatChange, colorClass } from '../../utils/format';
+import { formatNumber, formatPercent, formatChange, colorClass, round } from '../../utils/format';
 
 const futuresData = [
   { symbol: 'ES', name: 'E-mini S&P 500', month: 'Mar 24', last: 4572.25, change: 28.50, changePct: 0.63, volume: '1.2M', oi: '2.8M' },
@@ -20,25 +21,52 @@ const futuresData = [
   { symbol: '6B', name: 'British Pound', month: 'Mar 24', last: 1.2718, change: 0.0024, changePct: 0.19, volume: '98K', oi: '210K' },
 ];
 
+const categories = { ES: 'Equity', NQ: 'Equity', YM: 'Equity', RTY: 'Equity', CL: 'Commodity', GC: 'Commodity', SI: 'Commodity', ZC: 'Agri', ZW: 'Agri', ZS: 'Agri', ZB: 'Treasury', ZN: 'Treasury', '6E': 'Currency', '6J': 'Currency', '6B': 'Currency' };
+const cats = ['All', 'Equity', 'Commodity', 'Treasury', 'Currency', 'Agri'];
+
 function Futures() {
+  const [filter, setFilter] = useState('All');
+  const filtered = useMemo(() => filter === 'All' ? futuresData : futuresData.filter(f => categories[f.symbol] === filter), [filter]);
+  const chartData = useMemo(() => filtered.map(f => ({ name: f.symbol, changePct: f.changePct })), [filtered]);
+  const gainers = filtered.filter(f => f.changePct > 0).length;
+
   return (
-    <div className="h-full grid grid-cols-12 grid-rows-1 gap-[3px] p-[3px]">
-      <Panel title="Futures Market" className="col-span-12">
+    <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
+      <Panel title="Performance" className="col-span-4 row-span-3">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData} layout="vertical" margin={{ left: 5 }}>
+            <XAxis type="number" tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => v + '%'} />
+            <YAxis type="category" dataKey="name" tick={{ fill: '#e0e0e0', fontSize: 9 }} width={30} />
+            <Tooltip contentStyle={{ background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px' }} formatter={v => round(v, 2) + '%'} />
+            <Bar dataKey="changePct" radius={[0, 2, 2, 0]}>
+              {chartData.map(d => <Cell key={d.name} fill={d.changePct >= 0 ? '#00d26a' : '#ff3b3b'} />)}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </Panel>
+
+      <Panel title="Summary" className="col-span-2 row-span-3">
+        <div className="space-y-2 p-1 text-[10px]">
+          <div className="grid grid-cols-2 gap-1">
+            <div className="border border-bb-border p-1.5 text-center"><div className="text-lg font-bold text-bb-green">{gainers}</div><div className="text-[8px] text-bb-muted">GAINERS</div></div>
+            <div className="border border-bb-border p-1.5 text-center"><div className="text-lg font-bold text-bb-red">{filtered.length - gainers}</div><div className="text-[8px] text-bb-muted">LOSERS</div></div>
+          </div>
+          <div className="text-[9px] text-bb-muted">FILTER BY ASSET</div>
+          <div className="flex flex-wrap gap-0.5">
+            {cats.map(c => (
+              <button key={c} onClick={() => setFilter(c)} className={`px-1.5 py-[2px] text-[8px] border ${filter === c ? 'border-bb-amber text-bb-amber bg-bb-amber/10' : 'border-bb-border text-bb-muted'}`}>{c}</button>
+            ))}
+          </div>
+        </div>
+      </Panel>
+
+      <Panel title={`Futures Market (${filtered.length})`} className="col-span-6 row-span-3">
         <table className="bb-table">
           <thead>
-            <tr>
-              <th>Symbol</th>
-              <th>Name</th>
-              <th>Month</th>
-              <th className="text-right">Last</th>
-              <th className="text-right">Change</th>
-              <th className="text-right">Chg%</th>
-              <th className="text-right">Volume</th>
-              <th className="text-right">Open Int.</th>
-            </tr>
+            <tr><th>Symbol</th><th>Name</th><th>Month</th><th className="text-right">Last</th><th className="text-right">Change</th><th className="text-right">Chg%</th><th className="text-right">Volume</th><th className="text-right">Open Int.</th></tr>
           </thead>
           <tbody>
-            {futuresData.map(f => (
+            {filtered.map(f => (
               <tr key={f.symbol}>
                 <td className="text-bb-amber">{f.symbol}</td>
                 <td>{f.name}</td>
@@ -50,6 +78,31 @@ function Futures() {
                 <td className="text-right text-bb-muted">{f.oi}</td>
               </tr>
             ))}
+          </tbody>
+        </table>
+      </Panel>
+
+      <Panel title="Basis & Expiry" className="col-span-12 row-span-3">
+        <table className="bb-table">
+          <thead><tr><th>Symbol</th><th>Name</th><th>Category</th><th>Expiry</th><th className="text-right">Spot Est.</th><th className="text-right">Futures</th><th className="text-right">Basis</th><th className="text-right">Annualized %</th></tr></thead>
+          <tbody>
+            {filtered.map(f => {
+              const spot = f.last * (1 - f.changePct / 200);
+              const basis = f.last - spot;
+              const annBasis = (basis / spot) * 400;
+              return (
+                <tr key={f.symbol + '-basis'}>
+                  <td className="text-bb-amber">{f.symbol}</td>
+                  <td>{f.name}</td>
+                  <td className="text-bb-muted text-[9px]">{categories[f.symbol]}</td>
+                  <td className="text-bb-muted">{f.month}</td>
+                  <td className="text-right">{formatNumber(spot, f.last < 10 ? 4 : 2)}</td>
+                  <td className="text-right font-bold">{formatNumber(f.last, f.last < 10 ? 4 : 2)}</td>
+                  <td className={`text-right ${colorClass(basis)}`}>{formatChange(basis, 2)}</td>
+                  <td className={`text-right ${colorClass(annBasis)}`}>{formatPercent(annBasis)}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </Panel>

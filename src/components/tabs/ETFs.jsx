@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { useState, memo, useMemo } from 'react';
 import Panel from '../layout/Panel';
 import { formatNumber, formatPercent, formatChange, colorClass, round } from '../../utils/format';
 
@@ -20,26 +20,67 @@ const etfData = [
   { symbol: 'ARKK', name: 'ARK Innovation', price: 48.72, change: 1.84, changePct: 3.92, volume: '24.8M', aum: '8.2B', expense: 0.75, category: 'Large Growth' },
 ];
 
+const etfCategories = ['All', ...new Set(etfData.map(e => e.category))];
+
 function ETFs() {
+  const [filter, setFilter] = useState('All');
+  const [sortKey, setSortKey] = useState('changePct');
+  const [sortDir, setSortDir] = useState(-1);
+
+  const filtered = useMemo(() => {
+    const base = filter === 'All' ? etfData : etfData.filter(e => e.category === filter);
+    return [...base].sort((a, b) => ((a[sortKey] || 0) - (b[sortKey] || 0)) * sortDir);
+  }, [filter, sortKey, sortDir]);
+
+  const handleSort = (key) => {
+    if (sortKey === key) setSortDir(d => d * -1);
+    else { setSortKey(key); setSortDir(-1); }
+  };
+
+  const avgExpense = filtered.length > 0 ? filtered.reduce((s, e) => s + e.expense, 0) / filtered.length : 0;
+  const topPerf = [...filtered].sort((a, b) => b.changePct - a.changePct)[0];
+
   return (
-    <div className="h-full grid grid-cols-12 grid-rows-1 gap-[3px] p-[3px]">
-      <Panel title="Exchange-Traded Funds" className="col-span-12">
+    <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
+      <Panel title="ETF Summary" className="col-span-3 row-span-6">
+        <div className="space-y-2 text-[10px] p-0.5">
+          <div className="grid grid-cols-2 gap-1">
+            <div className="border border-bb-border p-1.5 text-center"><div className="text-lg font-bold text-bb-amber">{filtered.length}</div><div className="text-[8px] text-bb-muted">ETFs</div></div>
+            <div className="border border-bb-border p-1.5 text-center"><div className="text-lg font-bold text-bb-blue">{round(avgExpense, 2)}%</div><div className="text-[8px] text-bb-muted">AVG EXP.</div></div>
+          </div>
+          {topPerf && (
+            <div className="border border-bb-green/50 bg-bb-green/5 p-1.5">
+              <div className="text-[8px] text-bb-muted">TOP PERFORMER</div>
+              <div className="text-bb-amber font-bold">{topPerf.symbol}</div>
+              <div className={`text-sm font-bold ${colorClass(topPerf.changePct)}`}>{formatPercent(topPerf.changePct)}</div>
+            </div>
+          )}
+          <div className="text-[9px] text-bb-muted">FILTER</div>
+          <div className="flex flex-wrap gap-0.5">
+            {etfCategories.map(c => (
+              <button key={c} onClick={() => setFilter(c)} className={`px-1.5 py-[2px] text-[8px] border ${filter === c ? 'border-bb-amber text-bb-amber bg-bb-amber/10' : 'border-bb-border text-bb-muted'}`}>{c}</button>
+            ))}
+          </div>
+        </div>
+      </Panel>
+
+      <Panel title={`Exchange-Traded Funds (${filtered.length})`} className="col-span-9 row-span-6">
         <table className="bb-table">
           <thead>
             <tr>
               <th>Symbol</th>
               <th>Name</th>
               <th>Category</th>
-              <th className="text-right">Price</th>
-              <th className="text-right">Chg</th>
-              <th className="text-right">Chg%</th>
+              <th className="text-right cursor-pointer" onClick={() => handleSort('price')}>Price</th>
+              <th className="text-right cursor-pointer" onClick={() => handleSort('change')}>Chg</th>
+              <th className="text-right cursor-pointer" onClick={() => handleSort('changePct')}>Chg%</th>
               <th className="text-right">Volume</th>
               <th className="text-right">AUM</th>
-              <th className="text-right">Expense</th>
+              <th className="text-right cursor-pointer" onClick={() => handleSort('expense')}>Expense</th>
             </tr>
           </thead>
           <tbody>
-            {etfData.map(e => (
+            {filtered.map(e => (
               <tr key={e.symbol}>
                 <td className="text-bb-amber">{e.symbol}</td>
                 <td>{e.name}</td>

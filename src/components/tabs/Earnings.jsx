@@ -7,9 +7,41 @@ function Earnings() {
   const upcoming = useMemo(() => earningsCalendar.filter(e => !e.actual), []);
   const reported = useMemo(() => earningsCalendar.filter(e => e.actual), []);
 
+  const beats = useMemo(() => reported.filter(e => e.surprise && parseFloat(e.surprise) > 0).length, [reported]);
+  const misses = reported.length - beats;
+  const beatRate = reported.length > 0 ? (beats / reported.length * 100) : 0;
+
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
-      <Panel title="Upcoming Earnings" className="col-span-6 row-span-6">
+      <Panel title="Earnings Summary" className="col-span-12 row-span-1">
+        <div className="flex items-center gap-4 text-[10px] p-0.5">
+          <div className="flex items-center gap-2">
+            <span className="text-bb-muted">Upcoming:</span>
+            <span className="text-bb-amber font-bold text-sm">{upcoming.length}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-bb-muted">Reported:</span>
+            <span className="font-bold text-sm">{reported.length}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-bb-muted">Beats:</span>
+            <span className="text-bb-green font-bold text-sm">{beats}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-bb-muted">Misses:</span>
+            <span className="text-bb-red font-bold text-sm">{misses}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-bb-muted">Beat Rate:</span>
+            <span className={`font-bold text-sm ${beatRate >= 50 ? 'text-bb-green' : 'text-bb-red'}`}>{Math.round(beatRate)}%</span>
+          </div>
+          <div className="flex-1 h-2 bg-bb-dark border border-bb-border rounded-sm overflow-hidden">
+            <div className="h-full bg-bb-green" style={{ width: `${beatRate}%` }} />
+          </div>
+        </div>
+      </Panel>
+
+      <Panel title="Upcoming Earnings" className="col-span-6 row-span-5">
         <table className="bb-table">
           <thead>
             <tr>
@@ -34,7 +66,7 @@ function Earnings() {
         </table>
       </Panel>
 
-      <Panel title="Recent Earnings" className="col-span-6 row-span-6">
+      <Panel title="Recent Earnings" className="col-span-6 row-span-5">
         <table className="bb-table">
           <thead>
             <tr>
