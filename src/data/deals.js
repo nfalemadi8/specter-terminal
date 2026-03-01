@@ -89,4 +89,22 @@ export const deals = [
     premium: 15,
     status: 'Completed',
   },
+  {
+    date: '2020-06-28',
+    acquirer: 'Emaar Properties',
+    target: 'Arabtec Holding',
+    value: '1.8B',
+    sector: 'Construction',
+    premium: 35,
+    status: 'Completed',
+  },
+  {
+    date: '2024-06-12',
+    acquirer: 'QatarEnergy',
+    target: 'Shell (Pakistan operations)',
+    value: '2.1B',
+    sector: 'Energy',
+    premium: 12,
+    status: 'Pending',
+  },
 ];

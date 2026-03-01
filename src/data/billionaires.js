@@ -11,4 +11,6 @@ export const billionaires = [
   { name: 'Hussain Sajwani', netWorth: 7.8, company: 'DAMAC Properties', source: 'Real Estate Development', ytdChange: 18.5, country: 'UAE' },
   { name: 'Nassef Sawiris', netWorth: 8.6, company: 'OCI / Adidas', source: 'Construction, Chemicals', ytdChange: -3.1, country: 'Egypt' },
   { name: 'Mohammed Al Amoudi', netWorth: 8.1, company: 'Corral Petroleum / MIDROC', source: 'Oil, Diversified', ytdChange: 1.2, country: 'Saudi Arabia' },
+  { name: 'Majid Al Futtaim', netWorth: 6.4, company: 'Majid Al Futtaim Holding', source: 'Retail, Leisure, Real Estate', ytdChange: 4.8, country: 'UAE' },
+  { name: 'Aziz Akhannouch', netWorth: 2.1, company: 'Afriquia Gas / Akwa Group', source: 'Petroleum, Gas', ytdChange: 1.5, country: 'Morocco' },
 ];
