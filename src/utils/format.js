@@ -26,14 +26,16 @@ export function formatCurrency(num, decimals = 2, currency = 'USD') {
 
 export function formatPercent(num, decimals = 2) {
   if (num === null || num === undefined) return '-';
+  const arrow = num > 0 ? '▲' : num < 0 ? '▼' : '';
   const sign = num > 0 ? '+' : '';
-  return sign + round(num, decimals) + '%';
+  return arrow + sign + round(num, decimals) + '%';
 }
 
 export function formatChange(num, decimals = 2) {
   if (num === null || num === undefined) return '-';
+  const arrow = num > 0 ? '▲' : num < 0 ? '▼' : '';
   const sign = num > 0 ? '+' : '';
-  return sign + round(num, decimals);
+  return arrow + sign + round(num, decimals);
 }
 
 export function formatLargeNumber(num) {

@@ -133,7 +133,7 @@ export default function CommandBar({ onTabChange }) {
       {/* Spotlight Overlay */}
       {spotlight && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-start justify-center pt-[15vh]" onClick={() => setSpotlight(false)}>
-          <div className="w-[560px] bg-bb-panel border border-bb-amber/50 shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div role="dialog" aria-label="Command spotlight search" className="w-[560px] bg-bb-panel border border-bb-amber/50 shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center px-3 py-2 border-b border-bb-border">
               <span className="text-bb-amber text-[11px] font-bold mr-2">SPECTER &gt;</span>
               <input

@@ -1,3 +1,0 @@
-import{j as p}from"./index-AQoa-gqU.js";function x(e,t){if(!e||!e.length)return;const r=Object.keys(e[0]),b=[r.join(","),...e.map(l=>r.map(i=>{const c=l[i];if(c==null)return"";const n=String(c);return n.includes(",")||n.includes('"')||n.includes(`
-`)?`"${n.replace(/"/g,'""')}"`:n}).join(","))].join(`
-`),u=new Blob([b],{type:"text/csv;charset=utf-8;"}),s=URL.createObjectURL(u),o=document.createElement("a");o.href=s,o.download=t.endsWith(".csv")?t:t+".csv",o.click(),URL.revokeObjectURL(s)}function h({data:e,filename:t,label:r="CSV"}){return!e||!e.length?null:p.jsxs("button",{onClick:()=>x(e,t),className:"px-1.5 py-0.5 text-[8px] border border-bb-border text-bb-muted hover:text-bb-amber hover:border-bb-amber",children:["EXPORT ",r]})}export{h as E};

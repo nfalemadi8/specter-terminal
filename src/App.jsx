@@ -99,10 +99,13 @@ export default function App() {
 
   return (
     <div className="h-screen flex flex-col bg-bb-black font-mono">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-bb-amber focus:text-bb-black focus:px-4 focus:py-2 focus:text-sm">
+        Skip to content
+      </a>
       <Header />
       <TickerBar />
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
-      <main className="flex-1 overflow-hidden">
+      <main id="main-content" className="flex-1 overflow-hidden" role="main">
         <Suspense fallback={<LoadingFallback />}>
           {renderTab()}
         </Suspense>
