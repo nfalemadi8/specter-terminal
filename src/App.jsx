@@ -28,6 +28,14 @@ import IPOs from './components/tabs/IPOs';
 import Search from './components/tabs/Search';
 import PortfolioGenerator from './components/tabs/PortfolioGenerator';
 import StressTest from './components/tabs/StressTest';
+import PeerComparison from './components/tabs/PeerComparison';
+import SupplyChain from './components/tabs/SupplyChain';
+import EconCalendar from './components/tabs/EconCalendar';
+import FXMonitor from './components/tabs/FXMonitor';
+import YieldCurve from './components/tabs/YieldCurve';
+import ESGScreening from './components/tabs/ESGScreening';
+import MATracker from './components/tabs/MATracker';
+import Backtest from './components/tabs/Backtest';
 import Settings from './components/tabs/Settings';
 
 export default function App() {
@@ -60,6 +68,14 @@ export default function App() {
       case 'search': return <Search />;
       case 'portgen': return <PortfolioGenerator />;
       case 'stresstest': return <StressTest />;
+      case 'peers': return <PeerComparison />;
+      case 'supplychain': return <SupplyChain />;
+      case 'econcal': return <EconCalendar />;
+      case 'fxmonitor': return <FXMonitor />;
+      case 'yieldcurve': return <YieldCurve />;
+      case 'esg': return <ESGScreening />;
+      case 'ma': return <MATracker />;
+      case 'backtest': return <Backtest />;
       case 'settings': return <Settings />;
       default: return <Dashboard />;
     }

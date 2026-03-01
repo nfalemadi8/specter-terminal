@@ -24,5 +24,13 @@ export const tabs = [
   { id: 'search', label: 'SEARCH', shortcut: null },
   { id: 'portgen', label: 'PORT GEN', shortcut: null },
   { id: 'stresstest', label: 'STRESS TEST', shortcut: null },
+  { id: 'peers', label: 'PEERS', shortcut: null },
+  { id: 'supplychain', label: 'SUPPLY CHAIN', shortcut: null },
+  { id: 'econcal', label: 'ECON CAL', shortcut: null },
+  { id: 'fxmonitor', label: 'FX MONITOR', shortcut: null },
+  { id: 'yieldcurve', label: 'YIELD CURVE', shortcut: null },
+  { id: 'esg', label: 'ESG', shortcut: null },
+  { id: 'ma', label: 'M&A', shortcut: null },
+  { id: 'backtest', label: 'BACKTEST', shortcut: null },
   { id: 'settings', label: 'SETTINGS', shortcut: null },
 ];
