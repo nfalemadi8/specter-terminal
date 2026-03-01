@@ -241,3 +241,22 @@ html, body, #root {
     display: none !important;
   }
 }
+
+/* Price flash animations for real-time simulation */
+@keyframes flashGreen {
+  0% { background-color: rgba(0, 210, 106, 0.3); }
+  100% { background-color: transparent; }
+}
+
+@keyframes flashRed {
+  0% { background-color: rgba(255, 59, 59, 0.3); }
+  100% { background-color: transparent; }
+}
+
+.price-flash-up {
+  animation: flashGreen 0.8s ease-out;
+}
+
+.price-flash-down {
+  animation: flashRed 0.8s ease-out;
+}

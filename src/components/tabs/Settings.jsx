@@ -1,6 +1,7 @@
-import { memo } from 'react';
+import { useState, memo } from 'react';
 import Panel from '../layout/Panel';
 import { tabs } from '../../data/tabs';
+import { saveSimSettings } from '../../hooks/usePriceSimulation';
 
 const shortcuts = [
   { key: 'F1', action: 'Dashboard' },
@@ -44,7 +45,32 @@ const features = [
   'Persistence: Alerts, Watchlists, and Custom Fields saved to localStorage',
 ];
 
+const SPEED_OPTIONS = [
+  { label: '1s', ms: 1000 },
+  { label: '3s', ms: 3000 },
+  { label: '5s', ms: 5000 },
+  { label: '10s', ms: 10000 },
+  { label: '30s', ms: 30000 },
+];
+
+function getSimSettings() {
+  try {
+    const raw = localStorage.getItem('specter-sim-settings');
+    if (raw) return JSON.parse(raw);
+  } catch { /* ignore */ }
+  return { enabled: true, intervalMs: 5000 };
+}
+
 function Settings() {
+  const [simEnabled, setSimEnabled] = useState(() => getSimSettings().enabled);
+  const [simSpeed, setSimSpeed] = useState(() => getSimSettings().intervalMs);
+
+  const updateSim = (enabled, intervalMs) => {
+    setSimEnabled(enabled);
+    setSimSpeed(intervalMs);
+    saveSimSettings({ enabled, intervalMs });
+  };
+
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
       <Panel title="System Information" className="col-span-5 row-span-3">
@@ -87,17 +113,52 @@ function Settings() {
         </div>
       </Panel>
 
-      <Panel title="About" className="col-span-5 row-span-3">
-        <div className="p-4 text-center space-y-2">
-          <div className="text-bb-amber text-2xl font-bold tracking-widest">SPECTER TERMINAL</div>
-          <div className="text-bb-muted text-xs">Personal Bloomberg Terminal-Style Financial Dashboard</div>
-          <div className="text-bb-muted text-xs">Version 3.0 — Demo Mode</div>
-          <div className="text-bb-border mt-4">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-          <div className="text-bb-muted text-[10px] mt-2">
-            {tabs.length} modules | Real-time layout | Dark terminal theme
+      <Panel title="Simulation Settings" className="col-span-3 row-span-3">
+        <div className="space-y-3 p-1 text-[10px]">
+          <div className="flex items-center justify-between">
+            <span className="text-bb-muted">Real-Time Prices</span>
+            <button
+              onClick={() => updateSim(!simEnabled, simSpeed)}
+              className={`px-2 py-[2px] border text-[9px] font-bold ${simEnabled ? 'border-bb-green text-bb-green bg-bb-green/10' : 'border-bb-red text-bb-red bg-bb-red/10'}`}
+            >
+              {simEnabled ? 'ENABLED' : 'DISABLED'}
+            </button>
           </div>
-          <div className="text-bb-muted text-[10px]">
-            Built with React 19, Recharts, Tailwind CSS v4
+
+          <div>
+            <div className="text-bb-muted mb-1">Update Interval</div>
+            <div className="flex gap-1">
+              {SPEED_OPTIONS.map(o => (
+                <button key={o.ms} onClick={() => updateSim(simEnabled, o.ms)}
+                  className={`flex-1 px-1 py-[2px] text-[9px] border ${simSpeed === o.ms ? 'border-bb-amber text-bb-amber bg-bb-amber/10' : 'border-bb-border text-bb-muted'}`}
+                >{o.label}</button>
+              ))}
+            </div>
+          </div>
+
+          <div className="border-t border-bb-border pt-2 space-y-1">
+            <div className="flex justify-between"><span className="text-bb-muted">Status</span><span className={simEnabled ? 'text-bb-green' : 'text-bb-red'}>{simEnabled ? 'ACTIVE' : 'PAUSED'}</span></div>
+            <div className="flex justify-between"><span className="text-bb-muted">Interval</span><span className="text-bb-amber">{simSpeed / 1000}s</span></div>
+            <div className="flex justify-between"><span className="text-bb-muted">Flash Effect</span><span className="text-bb-green">ON</span></div>
+          </div>
+
+          <div className="text-bb-muted text-[8px] border-t border-bb-border pt-2">
+            Changes take effect on next page load. Prices simulate random walk with mean-reverting drift.
+          </div>
+        </div>
+      </Panel>
+
+      <Panel title="About" className="col-span-2 row-span-3">
+        <div className="p-2 text-center space-y-2">
+          <div className="text-bb-amber text-lg font-bold tracking-widest">SPECTER</div>
+          <div className="text-bb-muted text-[9px]">Bloomberg-Style Terminal</div>
+          <div className="text-bb-muted text-[9px]">v3.0 — Demo Mode</div>
+          <div className="text-bb-border mt-2 text-[8px]">━━━━━━━━━━━━━━</div>
+          <div className="text-bb-muted text-[8px] mt-1">
+            {tabs.length} modules
+          </div>
+          <div className="text-bb-muted text-[8px]">
+            React 19 + Vite 7
           </div>
         </div>
       </Panel>
