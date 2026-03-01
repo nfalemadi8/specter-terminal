@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, CartesianGrid } from 'recharts';
 import Panel from '../layout/Panel';
 import { forexPairs, cryptoPairs } from '../../data/forex';
@@ -35,7 +35,7 @@ function calcStrength(pairs) {
   return Object.entries(str).map(([cur, val]) => ({ currency: cur, strength: round(val, 3) })).sort((a, b) => b.strength - a.strength);
 }
 
-export default function FXMonitor() {
+function FXMonitor() {
   const [selectedPair, setSelectedPair] = useState(forexPairs[0]);
   const [convFrom, setConvFrom] = useState('USD');
   const [convTo, setConvTo] = useState('QAR');
@@ -188,3 +188,5 @@ export default function FXMonitor() {
     </div>
   );
 }
+
+export default memo(FXMonitor);

@@ -1,3 +1,4 @@
+import { memo, useMemo } from 'react';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
 import { formatPercent } from '../../utils/format';
@@ -21,12 +22,12 @@ function getSize(marketCap) {
   return 'col-span-1 row-span-1';
 }
 
-export default function HeatMap() {
-  const sorted = [...stocks].sort((a, b) => {
+function HeatMap() {
+  const sorted = useMemo(() => [...stocks].sort((a, b) => {
     const av = a.marketCap.includes('T') ? parseFloat(a.marketCap) * 1000 : parseFloat(a.marketCap);
     const bv = b.marketCap.includes('T') ? parseFloat(b.marketCap) * 1000 : parseFloat(b.marketCap);
     return bv - av;
-  });
+  }), []);
 
   return (
     <div className="h-full grid grid-cols-12 grid-rows-1 gap-[3px] p-[3px]">
@@ -54,3 +55,5 @@ export default function HeatMap() {
     </div>
   );
 }
+
+export default memo(HeatMap);

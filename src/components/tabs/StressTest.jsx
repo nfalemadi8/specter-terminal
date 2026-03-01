@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LineChart, Line, CartesianGrid } from 'recharts';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
@@ -146,7 +146,7 @@ function buildCustomScenario(marketShock, sectorOverrides) {
   };
 }
 
-export default function StressTest() {
+function StressTest() {
   const [selectedScenario, setSelectedScenario] = useState(SCENARIOS[0].id);
   const [customShock, setCustomShock] = useState(-20);
   const [customSectors, setCustomSectors] = useState({});
@@ -429,3 +429,5 @@ export default function StressTest() {
     </div>
   );
 }
+
+export default memo(StressTest);

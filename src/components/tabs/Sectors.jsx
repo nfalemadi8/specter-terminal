@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import Panel from '../layout/Panel';
 import { sectorPerformance } from '../../data/stocks';
@@ -9,7 +10,7 @@ const sectorDetail = sectorPerformance.map(s => ({
   month: round(s.change * 8 + (Math.random() - 0.5) * 5, 2),
 }));
 
-export default function Sectors() {
+function Sectors() {
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
       <Panel title="Sector Performance — Daily Change %" className="col-span-7 row-span-3">
@@ -80,3 +81,5 @@ export default function Sectors() {
     </div>
   );
 }
+
+export default memo(Sectors);

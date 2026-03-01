@@ -1,8 +1,9 @@
+import { memo } from 'react';
 import Panel from '../layout/Panel';
 import { forexPairs } from '../../data/forex';
 import { formatNumber, formatPercent, colorClass, round } from '../../utils/format';
 
-export default function Forex() {
+function Forex() {
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
       <Panel title="Major FX Pairs" className="col-span-12 row-span-6">
@@ -41,3 +42,5 @@ export default function Forex() {
     </div>
   );
 }
+
+export default memo(Forex);

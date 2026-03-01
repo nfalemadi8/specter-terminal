@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
 import Panel from '../layout/Panel';
 import { formatLargeNumber, colorClass, round } from '../../utils/format';
@@ -32,7 +32,7 @@ const SECTORS = ['All', ...new Set(billionaires.map(b => b.sector))];
 const COUNTRIES = ['All', ...new Set(billionaires.map(b => b.country))];
 const COLORS = ['#ffbf00', '#4a9eff', '#00d26a', '#ff3b3b', '#ff8c00', '#00e5ff', '#ffd700', '#6a6a6a'];
 
-export default function Billionaires() {
+function Billionaires() {
   const [sectorFilter, setSectorFilter] = useState('All');
   const [countryFilter, setCountryFilter] = useState('All');
   const [sortKey, setSortKey] = useState('rank');
@@ -227,3 +227,5 @@ export default function Billionaires() {
     </div>
   );
 }
+
+export default memo(Billionaires);

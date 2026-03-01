@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Panel from '../layout/Panel';
 import { formatNumber, formatPercent, formatChange, colorClass } from '../../utils/format';
 
@@ -19,7 +20,7 @@ const futuresData = [
   { symbol: '6B', name: 'British Pound', month: 'Mar 24', last: 1.2718, change: 0.0024, changePct: 0.19, volume: '98K', oi: '210K' },
 ];
 
-export default function Futures() {
+function Futures() {
   return (
     <div className="h-full grid grid-cols-12 grid-rows-1 gap-[3px] p-[3px]">
       <Panel title="Futures Market" className="col-span-12">
@@ -55,3 +56,5 @@ export default function Futures() {
     </div>
   );
 }
+
+export default memo(Futures);

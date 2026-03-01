@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, memo } from 'react';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from 'recharts';
 import Panel from '../layout/Panel';
 import { formatNumber, formatCurrency, colorClass, round } from '../../utils/format';
@@ -41,7 +41,7 @@ const STRATEGIES = [
 
 const tt = { contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' }, labelStyle: { color: '#ffbf00', fontSize: '10px' } };
 
-export default function Options() {
+function Options() {
   const { underlying, underlyingPrice, expiry, calls, puts } = chainData;
 
   // Pricer state
@@ -231,3 +231,5 @@ function PInput({ label, value, set, step }) {
     </div>
   );
 }
+
+export default memo(Options);

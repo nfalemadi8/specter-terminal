@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Panel from '../layout/Panel';
 import { formatNumber, formatPercent, formatChange, colorClass, round } from '../../utils/format';
 
@@ -19,7 +20,7 @@ const etfData = [
   { symbol: 'ARKK', name: 'ARK Innovation', price: 48.72, change: 1.84, changePct: 3.92, volume: '24.8M', aum: '8.2B', expense: 0.75, category: 'Large Growth' },
 ];
 
-export default function ETFs() {
+function ETFs() {
   return (
     <div className="h-full grid grid-cols-12 grid-rows-1 gap-[3px] p-[3px]">
       <Panel title="Exchange-Traded Funds" className="col-span-12">
@@ -57,3 +58,5 @@ export default function ETFs() {
     </div>
   );
 }
+
+export default memo(ETFs);

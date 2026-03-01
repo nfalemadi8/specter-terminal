@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import Panel from '../layout/Panel';
 import { economicCalendar, economicIndicators } from '../../data/economic';
 
@@ -6,7 +6,7 @@ const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 const REGIONS = ['All', 'US', 'EU', 'UK', 'JP', 'CN', 'QA', 'AE'];
 const IMPACTS = ['all', 'high', 'medium', 'low'];
 
-export default function EconCalendar() {
+function EconCalendar() {
   const [regionFilter, setRegionFilter] = useState('All');
   const [impactFilter, setImpactFilter] = useState('all');
   const [selectedDay, setSelectedDay] = useState(null);
@@ -158,3 +158,5 @@ export default function EconCalendar() {
     </div>
   );
 }
+
+export default memo(EconCalendar);

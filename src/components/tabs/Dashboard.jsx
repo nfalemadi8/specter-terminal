@@ -1,3 +1,4 @@
+import { memo, useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import Panel from '../layout/Panel';
 import { stocks, indices, sectorPerformance, generatePriceHistory } from '../../data/stocks';
@@ -17,7 +18,9 @@ const chartTooltipStyle = {
   labelStyle: { color: '#ffbf00', fontSize: '10px' },
 };
 
-export default function Dashboard() {
+function Dashboard() {
+  const topMovers = useMemo(() => [...stocks].sort((a, b) => Math.abs(b.changePct) - Math.abs(a.changePct)).slice(0, 10), []);
+
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
       {/* Row 1: Market indices + S&P chart */}
@@ -108,7 +111,7 @@ export default function Dashboard() {
             </tr>
           </thead>
           <tbody>
-            {[...stocks].sort((a, b) => Math.abs(b.changePct) - Math.abs(a.changePct)).slice(0, 10).map(s => (
+            {topMovers.map(s => (
               <tr key={s.symbol}>
                 <td className="text-bb-amber">{s.symbol}</td>
                 <td className="text-right">{formatNumber(s.price)}</td>
@@ -249,3 +252,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export default memo(Dashboard);

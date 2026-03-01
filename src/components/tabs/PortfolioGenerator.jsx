@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, ScatterChart, Scatter, CartesianGrid } from 'recharts';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
@@ -127,7 +127,7 @@ function portfolioMetrics(holdings, investmentAmount) {
   };
 }
 
-export default function PortfolioGenerator() {
+function PortfolioGenerator() {
   const [selectedTickers, setSelectedTickers] = useState(
     new Set(['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'JNJ', 'JPM', 'XOM', 'PG'])
   );
@@ -440,3 +440,5 @@ export default function PortfolioGenerator() {
     </div>
   );
 }
+
+export default memo(PortfolioGenerator);

@@ -5,6 +5,7 @@ import TickerBar from './components/layout/TickerBar';
 import TabBar from './components/layout/TabBar';
 import CommandBar from './components/layout/CommandBar';
 import LoadingFallback from './components/layout/LoadingFallback';
+import TabErrorBoundary from './components/layout/TabErrorBoundary';
 
 const Dashboard = lazy(() => import('./components/tabs/Dashboard'));
 const Equities = lazy(() => import('./components/tabs/Equities'));
@@ -106,9 +107,11 @@ export default function App() {
       <TickerBar />
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
       <main id="main-content" className="flex-1 overflow-hidden" role="main">
-        <Suspense fallback={<LoadingFallback />}>
-          {renderTab()}
-        </Suspense>
+        <TabErrorBoundary key={activeTab}>
+          <Suspense fallback={<LoadingFallback />}>
+            {renderTab()}
+          </Suspense>
+        </TabErrorBoundary>
       </main>
       <CommandBar onTabChange={setActiveTab} />
     </div>

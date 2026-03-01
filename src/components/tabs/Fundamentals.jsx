@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import Panel from '../layout/Panel';
 import MetricTooltip from '../layout/MetricTooltip';
@@ -58,7 +58,7 @@ function shariahCheck(stock) {
   return { checks, compliant };
 }
 
-export default function Fundamentals() {
+function Fundamentals() {
   const [selectedTicker, setSelectedTicker] = useState(stocks[0]?.ticker || 'AAPL');
   const [sectorFilter, setSectorFilter] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
@@ -439,3 +439,5 @@ function DCFInput({ label, value, onChange, disabled, min, max, step }) {
     </div>
   );
 }
+
+export default memo(Fundamentals);

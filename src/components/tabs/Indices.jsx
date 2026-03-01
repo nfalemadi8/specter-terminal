@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import Panel from '../layout/Panel';
 import { indices, generatePriceHistory } from '../../data/stocks';
@@ -16,7 +17,7 @@ const globalIndices = [
 
 const spxHistory = generatePriceHistory(4567.18, 60);
 
-export default function Indices() {
+function Indices() {
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
       <Panel title="US Indices" className="col-span-5 row-span-3">
@@ -88,3 +89,5 @@ export default function Indices() {
     </div>
   );
 }
+
+export default memo(Indices);

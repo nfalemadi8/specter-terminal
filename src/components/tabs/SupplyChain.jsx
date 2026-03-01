@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
@@ -25,7 +25,7 @@ function buildNetwork(stock, allStocks) {
   return { suppliers: supplierStocks, customers: customerStocks, riskScore, supplierConcentration, customerConcentration };
 }
 
-export default function SupplyChain() {
+function SupplyChain() {
   const [selectedTicker, setSelectedTicker] = useState('AAPL');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -212,3 +212,5 @@ export default function SupplyChain() {
     </div>
   );
 }
+
+export default memo(SupplyChain);

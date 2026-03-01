@@ -1,10 +1,11 @@
+import { memo, useMemo } from 'react';
 import Panel from '../layout/Panel';
 import { earningsCalendar } from '../../data/economic';
 import { colorClass } from '../../utils/format';
 
-export default function Earnings() {
-  const upcoming = earningsCalendar.filter(e => !e.actual);
-  const reported = earningsCalendar.filter(e => e.actual);
+function Earnings() {
+  const upcoming = useMemo(() => earningsCalendar.filter(e => !e.actual), []);
+  const reported = useMemo(() => earningsCalendar.filter(e => e.actual), []);
 
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
@@ -69,3 +70,5 @@ export default function Earnings() {
     </div>
   );
 }
+
+export default memo(Earnings);

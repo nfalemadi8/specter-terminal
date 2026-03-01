@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo, useMemo } from 'react';
 import Panel from '../layout/Panel';
 import { tabs } from '../../data/tabs';
 
@@ -94,16 +94,16 @@ const glossary = [
   { term: 'PEG', def: 'Price/Earnings to Growth ratio. P/E divided by earnings growth rate.' },
 ];
 
-export default function Reference() {
+function Reference() {
   const [activeSection, setActiveSection] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredSections = sections.map(s => ({
+  const filteredSections = useMemo(() => sections.map(s => ({
     ...s,
     content: searchTerm ? s.content.filter(c => c.term.toLowerCase().includes(searchTerm.toLowerCase()) || c.def.toLowerCase().includes(searchTerm.toLowerCase())) : s.content,
-  })).filter(s => s.content.length > 0);
+  })).filter(s => s.content.length > 0), [searchTerm]);
 
-  const filteredGlossary = searchTerm ? glossary.filter(g => g.term.toLowerCase().includes(searchTerm.toLowerCase()) || g.def.toLowerCase().includes(searchTerm.toLowerCase())) : glossary;
+  const filteredGlossary = useMemo(() => searchTerm ? glossary.filter(g => g.term.toLowerCase().includes(searchTerm.toLowerCase()) || g.def.toLowerCase().includes(searchTerm.toLowerCase())) : glossary, [searchTerm]);
 
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
@@ -177,3 +177,5 @@ export default function Reference() {
     </div>
   );
 }
+
+export default memo(Reference);

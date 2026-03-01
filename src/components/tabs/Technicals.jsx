@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import Panel from '../layout/Panel';
 import { generatePriceHistory } from '../../data/stocks';
@@ -35,7 +36,7 @@ const technicalSignals = [
   { indicator: 'ATR (14)', value: '4.82', signal: '-' },
 ];
 
-export default function Technicals() {
+function Technicals() {
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
       <Panel title="AAPL — Price with Moving Averages" className="col-span-8 row-span-3">
@@ -126,3 +127,5 @@ export default function Technicals() {
     </div>
   );
 }
+
+export default memo(Technicals);

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, BarChart, Bar, Cell, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
@@ -16,7 +16,7 @@ function esgTier(score) {
   return ESG_TIERS.find(t => score >= t.min) || ESG_TIERS[2];
 }
 
-export default function ESGScreening() {
+function ESGScreening() {
   const [minESG, setMinESG] = useState(0);
   const [sortBy, setSortBy] = useState('esgTotal');
   const [sortDir, setSortDir] = useState('desc');
@@ -192,3 +192,5 @@ export default function ESGScreening() {
     </div>
   );
 }
+
+export default memo(ESGScreening);

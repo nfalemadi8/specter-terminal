@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect , memo } from 'react';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
 import { formatNumber, formatPercent, formatCurrency, colorClass, currentTime, round } from '../../utils/format';
@@ -38,7 +38,7 @@ function getTargetLabel(type) {
   return '$';
 }
 
-export default function Alerts() {
+function Alerts() {
   const [alerts, setAlerts] = useState(loadAlerts);
   const [history, setHistory] = useState(loadHistory);
   const [newTicker, setNewTicker] = useState('AAPL');
@@ -289,3 +289,5 @@ export default function Alerts() {
     </div>
   );
 }
+
+export default memo(Alerts);

@@ -1,9 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
 import { formatNumber, formatPercent, formatChange, colorClass } from '../../utils/format';
 
-export default function Screener() {
+function Screener() {
   const [sortBy, setSortBy] = useState('changePct');
   const [sortDir, setSortDir] = useState('desc');
   const [sectorFilter, setSectorFilter] = useState('All');
@@ -88,3 +88,5 @@ export default function Screener() {
     </div>
   );
 }
+
+export default memo(Screener);

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell, Legend } from 'recharts';
 import Panel from '../layout/Panel';
 import ExportButton from '../layout/ExportButton';
@@ -14,7 +14,7 @@ function normalize(val, min, max) {
   return Math.max(0, Math.min(100, ((val - min) / (max - min)) * 100));
 }
 
-export default function PeerComparison() {
+function PeerComparison() {
   const [selectedTicker, setSelectedTicker] = useState('AAPL');
 
   const stock = useMemo(() => stocks.find(s => s.ticker === selectedTicker) || stocks[0], [selectedTicker]);
@@ -168,3 +168,5 @@ export default function PeerComparison() {
     </div>
   );
 }
+
+export default memo(PeerComparison);

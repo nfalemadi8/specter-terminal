@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, memo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import Panel from '../layout/Panel';
 import { treasuries, corporateBonds, generateYieldCurve } from '../../data/bonds';
@@ -27,7 +27,7 @@ function calcDv01(face, coupon, ytm, years) {
   return Math.abs(bondPrice(face, coupon, ytm + 0.0001, years) - bondPrice(face, coupon, ytm - 0.0001, years)) / 2;
 }
 
-export default function FixedIncome() {
+function FixedIncome() {
   const [bondType, setBondType] = useState('All');
   const [calcFace, setCalcFace] = useState(1000);
   const [calcCoupon, setCalcCoupon] = useState(4.5);
@@ -171,3 +171,5 @@ function CInput({ label, value, set, step }) {
     </div>
   );
 }
+
+export default memo(FixedIncome);

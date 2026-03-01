@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
 import Panel from '../layout/Panel';
 import { formatNumber, formatMcap, colorClass, round } from '../../utils/format';
@@ -25,7 +25,7 @@ const rumors = [
 
 const STATUS_COLORS = { Completed: '#00d26a', Pending: '#ffd700', Blocked: '#ff3b3b', Rumored: '#4a9eff' };
 
-export default function MATracker() {
+function MATracker() {
   const [statusFilter, setStatusFilter] = useState('All');
   const [sectorFilter, setSectorFilter] = useState('All');
 
@@ -162,3 +162,5 @@ export default function MATracker() {
     </div>
   );
 }
+
+export default memo(MATracker);

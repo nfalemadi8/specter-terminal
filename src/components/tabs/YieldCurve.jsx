@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, BarChart, Bar, Cell } from 'recharts';
 import Panel from '../layout/Panel';
 import { treasuries, generateYieldCurve } from '../../data/bonds';
@@ -28,7 +28,7 @@ function forwardRate(y1, t1, y2, t2) {
   return ((y2 * t2 - y1 * t1) / (t2 - t1));
 }
 
-export default function YieldCurve() {
+function YieldCurve() {
   const [selectedCurves, setSelectedCurves] = useState(['current', '3m']);
 
   const currentCurve = CURVES[0].data;
@@ -180,3 +180,5 @@ export default function YieldCurve() {
     </div>
   );
 }
+
+export default memo(YieldCurve);

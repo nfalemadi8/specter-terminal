@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect , memo } from 'react';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
 import { formatNumber, formatCurrency, formatPercent, colorClass, round } from '../../utils/format';
@@ -36,7 +36,7 @@ function safeEval(formula, stock) {
   }
 }
 
-export default function CustomFields() {
+function CustomFields() {
   const [fields, setFields] = useState(loadFields);
   const [newName, setNewName] = useState('');
   const [newFormula, setNewFormula] = useState('');
@@ -207,3 +207,5 @@ export default function CustomFields() {
     </div>
   );
 }
+
+export default memo(CustomFields);

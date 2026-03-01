@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo , memo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import Panel from '../layout/Panel';
 import ExportButton from '../layout/ExportButton';
@@ -29,7 +29,7 @@ function formatWithCurrency(value, currency) {
   return `${sign}${sym} ${formatted}`;
 }
 
-export default function Portfolio() {
+function Portfolio() {
   const [holdings, setHoldings] = useState(() => {
     const saved = loadData(STORAGE_KEY);
     return saved || portfolioHoldings;
@@ -373,3 +373,5 @@ export default function Portfolio() {
     </div>
   );
 }
+
+export default memo(Portfolio);

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Panel from '../layout/Panel';
 import { colorClass, formatPercent, round } from '../../utils/format';
 
@@ -20,7 +21,7 @@ const recentIPOs = [
   { company: 'Kodiak Gas', symbol: 'KGS', ipoPrice: 21.00, current: 26.48, date: 'Jun 2023', return: 26.10, sector: 'Energy' },
 ];
 
-export default function IPOs() {
+function IPOs() {
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
       <Panel title="Upcoming IPOs" className="col-span-12 row-span-3">
@@ -83,3 +84,5 @@ export default function IPOs() {
     </div>
   );
 }
+
+export default memo(IPOs);

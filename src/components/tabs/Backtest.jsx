@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, BarChart, Bar, Cell } from 'recharts';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
@@ -97,7 +97,7 @@ function getStrategyStocks(strategy) {
   }
 }
 
-export default function Backtest() {
+function Backtest() {
   const [strategyId, setStrategyId] = useState('momentum');
   const [capital, setCapital] = useState(100000);
   const [days, setDays] = useState(252);
@@ -261,3 +261,5 @@ export default function Backtest() {
     </div>
   );
 }
+
+export default memo(Backtest);

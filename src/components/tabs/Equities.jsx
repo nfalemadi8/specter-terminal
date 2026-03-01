@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo, useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import Panel from '../layout/Panel';
 import { stocks, generatePriceHistory } from '../../data/stocks';
@@ -9,9 +9,9 @@ const chartTooltip = {
   labelStyle: { color: '#ffbf00', fontSize: '10px' },
 };
 
-export default function Equities() {
+function Equities() {
   const [selected, setSelected] = useState(stocks[0]);
-  const history = generatePriceHistory(selected.price, 90);
+  const history = useMemo(() => generatePriceHistory(selected.price, 90), [selected.symbol]);
 
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
@@ -92,3 +92,5 @@ export default function Equities() {
     </div>
   );
 }
+
+export default memo(Equities);

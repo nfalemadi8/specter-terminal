@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Panel from '../layout/Panel';
 import { tabs } from '../../data/tabs';
 
@@ -43,7 +44,7 @@ const features = [
   'Persistence: Alerts, Watchlists, and Custom Fields saved to localStorage',
 ];
 
-export default function Settings() {
+function Settings() {
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
       <Panel title="System Information" className="col-span-5 row-span-3">
@@ -113,3 +114,5 @@ export default function Settings() {
     </div>
   );
 }
+
+export default memo(Settings);

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, memo } from 'react';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import Panel from '../layout/Panel';
 import { commodities, generateCommodityHistory } from '../../data/commodities';
@@ -24,7 +24,7 @@ const CATEGORY_COLORS = {
   Industrial: '#4a9eff',
 };
 
-export default function Commodities() {
+function Commodities() {
   const [selected, setSelected] = useState(commodities[0]);
   const [category, setCategory] = useState('All');
   const [period, setPeriod] = useState(90);
@@ -239,3 +239,5 @@ export default function Commodities() {
     </div>
   );
 }
+
+export default memo(Commodities);

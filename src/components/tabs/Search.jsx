@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import Panel from '../layout/Panel';
 import ExportButton from '../layout/ExportButton';
 import { stocks } from '../../data/stocks';
@@ -66,7 +66,7 @@ const SORT_FIELDS = [
   { id: 'esgTotal', label: 'ESG' },
 ];
 
-export default function Search() {
+function Search() {
   const [filters, setFilters] = useState([]);
   const [addingFilter, setAddingFilter] = useState(false);
   const [sortBy, setSortBy] = useState('mcap');
@@ -363,3 +363,5 @@ export default function Search() {
     </div>
   );
 }
+
+export default memo(Search);

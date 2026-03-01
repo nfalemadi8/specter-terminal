@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo , memo } from 'react';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
 import { formatCurrency, formatPercent, colorClass } from '../../utils/format';
@@ -23,7 +23,7 @@ const TYPES = ['all', 'signal', 'risk', 'opportunity', 'analysis'];
 const SEVERITY_COLORS = { high: 'text-bb-red', medium: 'text-bb-amber', low: 'text-bb-muted' };
 const TYPE_COLORS = { signal: 'bg-bb-blue/20 text-bb-blue', risk: 'bg-bb-red/20 text-bb-red', opportunity: 'bg-bb-green/20 text-bb-green', analysis: 'bg-bb-cyan/20 text-bb-cyan' };
 
-export default function AIInsights() {
+function AIInsights() {
   const [catFilter, setCatFilter] = useState('All');
   const [typeFilter, setTypeFilter] = useState('all');
   const [sevFilter, setSevFilter] = useState('all');
@@ -199,3 +199,5 @@ export default function AIInsights() {
     </div>
   );
 }
+
+export default memo(AIInsights);

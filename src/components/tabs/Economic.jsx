@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import Panel from '../layout/Panel';
 import { economicIndicators, economicCalendar, fedRateHistory } from '../../data/economic';
@@ -8,7 +9,7 @@ const chartTooltip = {
   labelStyle: { color: '#ffbf00', fontSize: '10px' },
 };
 
-export default function Economic() {
+function Economic() {
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
       <Panel title="Key Economic Indicators" className="col-span-6 row-span-3">
@@ -96,3 +97,5 @@ export default function Economic() {
     </div>
   );
 }
+
+export default memo(Economic);

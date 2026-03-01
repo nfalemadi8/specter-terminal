@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect , memo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import Panel from '../layout/Panel';
 import ExportButton from '../layout/ExportButton';
@@ -29,7 +29,7 @@ function defaultWatchlists() {
 
 function saveWatchlists(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
 
-export default function Watchlist() {
+function Watchlist() {
   const [data, setData] = useState(loadWatchlists);
   const [selectedTicker, setSelectedTicker] = useState(null);
   const [addTicker, setAddTicker] = useState('');
@@ -265,3 +265,5 @@ export default function Watchlist() {
     </div>
   );
 }
+
+export default memo(Watchlist);

@@ -1,8 +1,9 @@
+import { memo } from 'react';
 import Panel from '../layout/Panel';
 import { cryptoPairs } from '../../data/forex';
 import { formatNumber, formatPercent, colorClass } from '../../utils/format';
 
-export default function Crypto() {
+function Crypto() {
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
       <Panel title="Cryptocurrency Market" className="col-span-12 row-span-6">
@@ -38,3 +39,5 @@ export default function Crypto() {
     </div>
   );
 }
+
+export default memo(Crypto);

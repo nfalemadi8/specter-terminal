@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, memo, useMemo } from 'react';
 import Panel from '../layout/Panel';
 import { newsItems } from '../../data/news';
 
 const categories = ['All', 'Equities', 'Fixed Income', 'Commodities', 'Central Banks', 'Economics', 'Earnings', 'Crypto', 'Forex', 'Technology'];
 
-export default function News() {
+function News() {
   const [filter, setFilter] = useState('All');
-  const filtered = filter === 'All' ? newsItems : newsItems.filter(n => n.category === filter);
+  const filtered = useMemo(() => filter === 'All' ? newsItems : newsItems.filter(n => n.category === filter), [filter]);
 
   return (
     <div className="h-full grid grid-cols-12 grid-rows-1 gap-[3px] p-[3px]">
@@ -50,3 +50,5 @@ export default function News() {
     </div>
   );
 }
+
+export default memo(News);
