@@ -21,8 +21,9 @@ function genFXHistory(baseRate, days = 60) {
 }
 
 // Majors vs GCC split
-const majors = forexPairs.filter(p => !['USD/QAR', 'USD/AED', 'USD/SAR'].includes(p.pair));
-const gcc = forexPairs.filter(p => ['USD/QAR', 'USD/AED', 'USD/SAR'].includes(p.pair));
+const gccPairs = ['USD/QAR', 'USD/AED', 'USD/SAR', 'SAR/QAR', 'SAR/AED'];
+const majors = forexPairs.filter(p => !gccPairs.includes(p.pair));
+const gcc = forexPairs.filter(p => gccPairs.includes(p.pair));
 
 // Currency strength (simplified: sum of changes where currency appears)
 function calcStrength(pairs) {

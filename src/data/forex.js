@@ -15,6 +15,8 @@ export const forexPairs = [
   { pair: 'USD/QAR', bid: 3.6400, ask: 3.6405, change: 0.0001, changePct: 0.00, high: 3.6410, low: 3.6395 },
   { pair: 'USD/AED', bid: 3.6725, ask: 3.6730, change: 0.0000, changePct: 0.00, high: 3.6735, low: 3.6720 },
   { pair: 'USD/SAR', bid: 3.7500, ask: 3.7505, change: 0.0001, changePct: 0.00, high: 3.7510, low: 3.7495 },
+  { pair: 'SAR/QAR', bid: 0.9707, ask: 0.9709, change: 0.0000, changePct: 0.00, high: 0.9710, low: 0.9705 },
+  { pair: 'SAR/AED', bid: 0.9793, ask: 0.9795, change: 0.0000, changePct: 0.00, high: 0.9796, low: 0.9791 },
 ];
 
 export const cryptoPairs = [

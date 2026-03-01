@@ -12,7 +12,7 @@ const STORAGE_KEY = 'specter-portfolio';
 const GOAL_QAR = 18000000;
 const GOAL_USD = GOAL_QAR / 3.64; // ~$4,945,054
 
-const CURRENCY_SYMBOLS = { USD: '$', QAR: 'QR', AED: 'AED' };
+const CURRENCY_SYMBOLS = { USD: '$', QAR: 'QR', AED: 'AED', SAR: 'SR' };
 
 const validSymbols = stocks.map(s => s.symbol);
 
@@ -147,7 +147,7 @@ function Portfolio() {
     exportToCSV(rows, 'specter-portfolio-export');
   };
 
-  const currencies = ['USD', 'QAR', 'AED'];
+  const currencies = ['USD', 'QAR', 'AED', 'SAR'];
 
   if (holdings.length === 0) {
     return (
