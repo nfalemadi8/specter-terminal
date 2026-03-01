@@ -1,0 +1,1 @@
+import{j as o}from"./index-B_uxPOAl.js";import{e as b}from"./exportCsv--1j2Evrk.js";function m({data:r,filename:e,label:t="CSV"}){return!r||!r.length?null:o.jsxs("button",{onClick:()=>b(r,e),className:"px-1.5 py-0.5 text-[8px] border border-bb-border text-bb-muted hover:text-bb-amber hover:border-bb-amber",children:["EXPORT ",t]})}export{m as E};
