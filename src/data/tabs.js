@@ -32,5 +32,9 @@ export const tabs = [
   { id: 'esg', label: 'ESG', shortcut: null },
   { id: 'ma', label: 'M&A', shortcut: null },
   { id: 'backtest', label: 'BACKTEST', shortcut: null },
+  { id: 'billionaires', label: 'BILLIONAIRES', shortcut: null },
+  { id: 'aiinsights', label: 'AI INSIGHTS', shortcut: null },
+  { id: 'customfields', label: 'CUSTOM FIELDS', shortcut: null },
+  { id: 'reference', label: 'REFERENCE', shortcut: null },
   { id: 'settings', label: 'SETTINGS', shortcut: null },
 ];

@@ -36,6 +36,10 @@ import YieldCurve from './components/tabs/YieldCurve';
 import ESGScreening from './components/tabs/ESGScreening';
 import MATracker from './components/tabs/MATracker';
 import Backtest from './components/tabs/Backtest';
+import Billionaires from './components/tabs/Billionaires';
+import AIInsights from './components/tabs/AIInsights';
+import CustomFields from './components/tabs/CustomFields';
+import Reference from './components/tabs/Reference';
 import Settings from './components/tabs/Settings';
 
 export default function App() {
@@ -76,6 +80,10 @@ export default function App() {
       case 'esg': return <ESGScreening />;
       case 'ma': return <MATracker />;
       case 'backtest': return <Backtest />;
+      case 'billionaires': return <Billionaires />;
+      case 'aiinsights': return <AIInsights />;
+      case 'customfields': return <CustomFields />;
+      case 'reference': return <Reference />;
       case 'settings': return <Settings />;
       default: return <Dashboard />;
     }
