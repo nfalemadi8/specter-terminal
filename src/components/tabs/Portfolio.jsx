@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import Panel from '../layout/Panel';
+import ExportButton from '../layout/ExportButton';
 import { portfolioHoldings, calculatePortfolioMetrics, portfolioHistory, sectorAllocation } from '../../data/portfolio';
 import { stocks } from '../../data/stocks';
 import { formatNumber, formatCurrency, formatPercent, colorClass, round } from '../../utils/format';
@@ -251,6 +252,9 @@ export default function Portfolio() {
 
       {/* Holdings Table */}
       <Panel title="Holdings" className="col-span-12 row-span-4">
+        <div className="flex justify-end px-1 py-0.5">
+          <ExportButton data={portfolioHoldings} filename="portfolio-holdings" />
+        </div>
         <table className="bb-table">
           <thead>
             <tr>

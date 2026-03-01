@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import Panel from '../layout/Panel';
+import ExportButton from '../layout/ExportButton';
 import { stocks, generatePriceHistory } from '../../data/stocks';
 import { formatNumber, formatPercent, formatChange, formatCurrency, formatMcap, colorClass, round } from '../../utils/format';
 
@@ -159,6 +160,9 @@ export default function Watchlist() {
 
       {/* Main Watchlist Table */}
       <Panel title={`${activeList.name} (${watchlistData.length})`} className="col-span-7 row-span-4">
+        <div className="flex justify-end px-1 py-0.5">
+          <ExportButton data={watchlistData} filename="watchlist" />
+        </div>
         <table className="bb-table">
           <thead>
             <tr>

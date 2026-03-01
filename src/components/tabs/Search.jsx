@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import Panel from '../layout/Panel';
+import ExportButton from '../layout/ExportButton';
 import { stocks } from '../../data/stocks';
 import { formatNumber, formatCurrency, formatPercent, formatMcap, colorClass } from '../../utils/format';
 import { exportToCSV } from '../../utils/calculations';
@@ -287,12 +288,15 @@ export default function Search() {
             <span className="text-bb-muted">Matched: <span className={results.length > 0 ? 'text-bb-green font-bold' : 'text-bb-red font-bold'}>{results.length}</span></span>
             <span className="text-bb-muted">Filters: <span className="text-bb-amber">{filters.length}</span></span>
           </div>
-          <button
-            onClick={handleExport}
-            className="px-2 py-0.5 border border-bb-border text-bb-cyan hover:text-bb-white hover:border-bb-cyan"
-          >
-            Export CSV
-          </button>
+          <div className="flex items-center gap-1">
+            <ExportButton data={results} filename="search-results" />
+            <button
+              onClick={handleExport}
+              className="px-2 py-0.5 border border-bb-border text-bb-cyan hover:text-bb-white hover:border-bb-cyan"
+            >
+              Export CSV
+            </button>
+          </div>
         </div>
       </Panel>
 

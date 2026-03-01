@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell, Legend } from 'recharts';
 import Panel from '../layout/Panel';
+import ExportButton from '../layout/ExportButton';
 import { stocks } from '../../data/stocks';
 import { formatNumber, formatCurrency, formatPercent, formatMcap, colorClass } from '../../utils/format';
 
@@ -135,6 +136,9 @@ export default function PeerComparison() {
 
       {/* Side-by-Side Metrics Table */}
       <Panel title="Peer Comparison Table" className="col-span-10 row-span-3">
+        <div className="flex justify-end px-1 py-0.5">
+          <ExportButton data={allCompared} filename="peer-comparison" />
+        </div>
         <table className="bb-table">
           <thead>
             <tr>
