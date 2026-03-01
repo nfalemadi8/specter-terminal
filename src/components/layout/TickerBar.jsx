@@ -1,17 +1,31 @@
-import { indices } from '../../data/stocks';
-import { commodities } from '../../data/commodities';
-import { forexPairs } from '../../data/forex';
-import { cryptoPairs } from '../../data/forex';
+import { useState, useEffect } from 'react';
+import { getIndices, getCommodities, getCurrencyRates, getCrypto } from '../../services/dataProvider';
 import { formatPercent, round } from '../../utils/format';
 
 export default function TickerBar() {
-  const tickers = [
-    ...indices.map(i => ({ symbol: i.symbol, price: i.price, change: i.changePct })),
-    { symbol: 'GOLD', price: commodities[0].price, change: commodities[0].changePct },
-    { symbol: 'OIL', price: commodities[4].price, change: commodities[4].changePct },
-    { symbol: 'EUR/USD', price: forexPairs[0].bid, change: forexPairs[0].changePct },
-    { symbol: 'BTC', price: cryptoPairs[0].price, change: cryptoPairs[0].changePct },
-  ];
+  const [tickers, setTickers] = useState([]);
+
+  useEffect(() => {
+    Promise.all([getIndices(), getCommodities(), getCurrencyRates(), getCrypto()]).then(([indices, commodities, currencies, crypto]) => {
+      const items = [];
+      // Top indices
+      indices.slice(0, 6).forEach(i => items.push({ symbol: i.id, price: i.val, change: i.chgPct }));
+      // Gold & Oil
+      const gold = commodities.find(c => c.id === 'XAU');
+      const oil = commodities.find(c => c.id === 'WTI');
+      if (gold) items.push({ symbol: 'GOLD', price: gold.pr, change: gold.chgPct });
+      if (oil) items.push({ symbol: 'OIL', price: oil.pr, change: oil.chgPct });
+      // EUR/USD
+      const eurRate = currencies.EUR?.rate;
+      if (eurRate) items.push({ symbol: 'EUR/USD', price: round(1 / eurRate, 4), change: 0 });
+      // BTC
+      const btc = crypto.find(c => c.id === 'BTC');
+      if (btc) items.push({ symbol: 'BTC', price: btc.pr, change: btc.chgPct });
+      setTickers(items);
+    });
+  }, []);
+
+  if (tickers.length === 0) return <div className="h-5 bg-bb-black border-b border-bb-border" />;
 
   return (
     <div className="flex items-center gap-0 px-2 py-[2px] bg-bb-black border-b border-bb-border overflow-x-auto scrollbar-none">

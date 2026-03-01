@@ -1,8 +1,8 @@
-import { useState, useMemo , memo } from 'react';
+import { useState, useEffect, useMemo, memo } from 'react';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, BarChart, Bar, Cell } from 'recharts';
 import Panel from '../layout/Panel';
-import { stocks } from '../../data/stocks';
-import { formatCurrency, formatPercent, formatNumber, colorClass, round } from '../../utils/format';
+import { getAllStocks } from '../../services/dataProvider';
+import { formatCurrency, formatPercent, colorClass, round } from '../../utils/format';
 
 const tt = { contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' }, labelStyle: { color: '#ffbf00', fontSize: '10px' } };
 
@@ -16,7 +16,6 @@ const STRATEGIES = [
 ];
 
 function runBacktest(strategy, capital, days) {
-  // Simulated backtest engine
   const dailyReturns = [];
   let equity = capital;
   const equityCurve = [];
@@ -25,7 +24,6 @@ function runBacktest(strategy, capital, days) {
   let wins = 0, losses = 0;
   const trades = [];
 
-  // Strategy-specific expected return/vol
   const profiles = {
     momentum: { mu: 0.08, sigma: 1.8, winRate: 0.54 },
     meanrev: { mu: 0.06, sigma: 1.4, winRate: 0.58 },
@@ -42,23 +40,14 @@ function runBacktest(strategy, capital, days) {
     const dailyRet = (profile.mu / 252) + (profile.sigma / 100) * (Math.random() - 0.48);
     equity *= (1 + dailyRet);
     dailyReturns.push(dailyRet);
-
     if (equity > maxEquity) maxEquity = equity;
     const dd = (equity - maxEquity) / maxEquity;
     if (dd < maxDrawdown) maxDrawdown = dd;
-
     equityCurve.push({ date: date.toISOString().split('T')[0], equity: round(equity, 2), drawdown: round(dd * 100, 2) });
-
-    // Generate trades on rebalance days
     if (i % 21 === 0 && i > 0) {
       const tradeReturn = dailyRet * 20 * 100;
       if (tradeReturn > 0) wins++; else losses++;
-      trades.push({
-        date: date.toISOString().split('T')[0],
-        action: tradeReturn > 0 ? 'WIN' : 'LOSS',
-        return: round(tradeReturn, 2),
-        equity: round(equity, 0),
-      });
+      trades.push({ date: date.toISOString().split('T')[0], action: tradeReturn > 0 ? 'WIN' : 'LOSS', return: round(tradeReturn, 2), equity: round(equity, 0) });
     }
   }
 
@@ -69,8 +58,6 @@ function runBacktest(strategy, capital, days) {
   const annualReturn = totalReturn / (days / 252);
   const annualVol = dailyStd * Math.sqrt(252);
   const calmar = annualReturn / Math.abs(maxDrawdown || 0.01);
-
-  // Monthly returns
   const monthlyReturns = [];
   for (let i = 0; i < Math.min(12, Math.floor(days / 21)); i++) {
     const slice = dailyReturns.slice(i * 21, (i + 1) * 21);
@@ -78,38 +65,36 @@ function runBacktest(strategy, capital, days) {
     monthlyReturns.push({ month: `M${i + 1}`, return: round(monthRet, 2) });
   }
 
-  return {
-    equityCurve, totalReturn, sharpe, maxDrawdown, annualReturn, annualVol, calmar,
-    wins, losses, winRate: wins / (wins + losses || 1), trades, finalEquity: equity,
-    monthlyReturns,
-  };
+  return { equityCurve, totalReturn, sharpe, maxDrawdown, annualReturn, annualVol, calmar, wins, losses, winRate: wins / (wins + losses || 1), trades, finalEquity: equity, monthlyReturns };
 }
 
-// Select stocks for strategy
-function getStrategyStocks(strategy) {
+function getStrategyStocks(strategy, stocks) {
+  if (!stocks || stocks.length === 0) return [];
   switch (strategy.id) {
-    case 'value': return stocks.filter(s => s.pe <= (strategy.params.maxPE || 15)).slice(0, strategy.params.topN || 5);
-    case 'quality': return stocks.filter(s => s.roe >= (strategy.params.minROE || 20) && s.debtEquity <= (strategy.params.maxDE || 0.5));
+    case 'value': return stocks.filter(s => s.pe > 0 && s.pe <= (strategy.params.maxPE || 15)).slice(0, strategy.params.topN || 5);
+    case 'quality': return stocks.filter(s => s.roe >= (strategy.params.minROE || 20) && s.debtToEquity <= (strategy.params.maxDE || 0.5)).slice(0, 5);
     case 'dividend': return [...stocks].sort((a, b) => b.divYield - a.divYield).slice(0, strategy.params.topN || 5);
     case 'lowvol': return [...stocks].sort((a, b) => a.beta - b.beta).slice(0, strategy.params.topN || 5);
-    case 'momentum': return [...stocks].sort((a, b) => b.changePct - a.changePct).slice(0, strategy.params.topN || 5);
+    case 'momentum': return [...stocks].sort((a, b) => b.changePercent - a.changePercent).slice(0, strategy.params.topN || 5);
     default: return stocks.slice(0, 5);
   }
 }
 
 function Backtest() {
+  const [stocks, setStocks] = useState(null);
   const [strategyId, setStrategyId] = useState('momentum');
   const [capital, setCapital] = useState(100000);
   const [days, setDays] = useState(252);
   const [hasRun, setHasRun] = useState(false);
 
+  useEffect(() => { getAllStocks().then(setStocks); }, []);
+
   const strategy = STRATEGIES.find(s => s.id === strategyId);
   const results = useMemo(() => hasRun ? runBacktest(strategy, capital, days) : null, [hasRun, strategyId, capital, days]);
-  const selectedStocks = useMemo(() => getStrategyStocks(strategy), [strategy]);
+  const selectedStocks = useMemo(() => getStrategyStocks(strategy, stocks || []), [strategy, stocks]);
 
-  // Benchmark (S&P 500 simulation)
   const benchmark = useMemo(() => {
-    if (!hasRun) return null;
+    if (!hasRun || !results) return null;
     let eq = capital;
     return results.equityCurve.map(p => {
       eq *= (1 + 0.1 / 252 + (Math.random() - 0.5) * 0.012);
@@ -117,9 +102,10 @@ function Backtest() {
     });
   }, [hasRun, results, capital]);
 
+  if (!stocks) return <div className="p-4 text-bb-muted text-center text-[11px]">Loading stock data…</div>;
+
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
-      {/* Strategy Selection */}
       <Panel title="Backtest Engine" className="col-span-3 row-span-3">
         <div className="space-y-1.5 text-[10px]">
           {STRATEGIES.map(s => (
@@ -132,7 +118,6 @@ function Backtest() {
         </div>
       </Panel>
 
-      {/* Parameters */}
       <Panel title="Parameters" className="col-span-3 row-span-3">
         <div className="space-y-2 text-[10px] p-0.5">
           <div>
@@ -163,7 +148,6 @@ function Backtest() {
 
       {results ? (
         <>
-          {/* Equity Curve */}
           <Panel title="Equity Curve" className="col-span-6 row-span-3">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={benchmark || results.equityCurve}>
@@ -178,7 +162,6 @@ function Backtest() {
             </ResponsiveContainer>
           </Panel>
 
-          {/* Performance Metrics */}
           <Panel title="Performance Metrics" className="col-span-3 row-span-3">
             <div className="space-y-1 text-[10px] p-0.5">
               <div className="text-center py-2 border border-bb-border bg-bb-dark">
@@ -202,7 +185,6 @@ function Backtest() {
             </div>
           </Panel>
 
-          {/* Drawdown Chart */}
           <Panel title="Drawdown" className="col-span-3 row-span-3">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={results.equityCurve}>
@@ -216,7 +198,6 @@ function Backtest() {
             </ResponsiveContainer>
           </Panel>
 
-          {/* Monthly Returns */}
           <Panel title="Monthly Returns" className="col-span-3 row-span-3">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={results.monthlyReturns} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
@@ -230,7 +211,6 @@ function Backtest() {
             </ResponsiveContainer>
           </Panel>
 
-          {/* Trade Log */}
           <Panel title="Trade Log" className="col-span-3 row-span-3">
             <table className="bb-table">
               <thead><tr><th>Date</th><th>Result</th><th className="text-right">Return</th><th className="text-right">Equity</th></tr></thead>
@@ -253,7 +233,7 @@ function Backtest() {
             <div className="text-center space-y-2">
               <div className="text-3xl text-bb-border">BACKTEST</div>
               <div>Select a strategy, configure parameters, and click RUN BACKTEST</div>
-              <div className="text-[9px]">Simulated historical performance engine</div>
+              <div className="text-[9px]">Simulated historical performance engine with {stocks.length} global stocks</div>
             </div>
           </div>
         </Panel>
