@@ -1,9 +1,22 @@
 import { useState, useMemo } from 'react';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import Panel from '../layout/Panel';
+import MetricTooltip from '../layout/MetricTooltip';
 import { stocks, generatePriceHistory } from '../../data/stocks';
 import { calculateDCF } from '../../utils/calculations';
 import { formatNumber, formatCurrency, formatPercent, formatMcap, colorClass, round } from '../../utils/format';
+
+// Map display labels to MetricTooltip keys
+const TOOLTIP_KEY = {
+  'P/E (TTM)': 'P/E',
+  'P/B': 'P/B',
+  'Div Yield': 'Div Yield',
+  'EPS': 'EPS',
+  'Beta': 'Beta',
+  'ROE': 'ROE',
+  'D/E Ratio': 'D/E',
+  'D/A Ratio': 'D/A',
+};
 
 const chartTooltip = {
   contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' },
@@ -242,7 +255,9 @@ export default function Fundamentals() {
               ['Beta', stock.beta],
             ].map(([label, val]) => (
               <tr key={label}>
-                <td className="text-bb-muted">{label}</td>
+                <td className="text-bb-muted">
+                  {TOOLTIP_KEY[label] ? <MetricTooltip label={TOOLTIP_KEY[label]}>{label}</MetricTooltip> : label}
+                </td>
                 <td className="text-right font-bold">{val}</td>
               </tr>
             ))}
@@ -262,7 +277,9 @@ export default function Fundamentals() {
               ['Volume', stock.volume],
             ].map(([label, val]) => (
               <tr key={label}>
-                <td className="text-bb-muted">{label}</td>
+                <td className="text-bb-muted">
+                  {TOOLTIP_KEY[label] ? <MetricTooltip label={TOOLTIP_KEY[label]}>{label}</MetricTooltip> : label}
+                </td>
                 <td className={`text-right font-bold ${
                   label === 'Rev Growth' ? colorClass(stock.revGrowth) : ''
                 }`}>{val}</td>

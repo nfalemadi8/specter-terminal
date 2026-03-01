@@ -1,4 +1,5 @@
-import { useState, lazy, Suspense } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
+import { tabs } from './data/tabs';
 import Header from './components/layout/Header';
 import TickerBar from './components/layout/TickerBar';
 import TabBar from './components/layout/TabBar';
@@ -46,6 +47,11 @@ const Settings = lazy(() => import('./components/tabs/Settings'));
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
+
+  useEffect(() => {
+    const tab = tabs.find(t => t.id === activeTab);
+    document.title = tab ? `${tab.label} — SPECTER Terminal` : 'SPECTER Terminal';
+  }, [activeTab]);
 
   const renderTab = () => {
     switch (activeTab) {

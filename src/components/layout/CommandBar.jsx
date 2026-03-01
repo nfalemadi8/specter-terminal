@@ -87,6 +87,16 @@ export default function CommandBar({ onTabChange }) {
         }
       }
     }
+
+    // 1-9 — quick tab switch (only when not focused on an input/textarea/select)
+    const tag = document.activeElement?.tagName;
+    if (!e.ctrlKey && !e.metaKey && !e.altKey && tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') {
+      const num = parseInt(e.key);
+      if (num >= 1 && num <= 9 && tabs[num - 1]) {
+        e.preventDefault();
+        onTabChange(tabs[num - 1].id);
+      }
+    }
   }, [onTabChange, spotlight]);
 
   useEffect(() => {

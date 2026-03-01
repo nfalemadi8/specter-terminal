@@ -149,6 +149,30 @@ export default function Portfolio() {
 
   const currencies = ['USD', 'QAR', 'AED'];
 
+  if (holdings.length === 0) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="text-bb-amber text-2xl font-bold mb-2">NO HOLDINGS</div>
+          <div className="text-bb-muted text-[11px] mb-4">
+            Your portfolio is empty. Add a position using the form below to get started.
+          </div>
+          <div className="inline-flex gap-1 text-[10px]">
+            <input type="text" value={newTicker} onChange={e => { setNewTicker(e.target.value.toUpperCase()); setTickerError(''); }}
+              placeholder="TICKER" className="w-20 bg-bb-dark border border-bb-border text-bb-white px-1.5 py-1 font-mono focus:border-bb-amber focus:outline-none" />
+            <input type="number" value={newShares} onChange={e => setNewShares(e.target.value)}
+              placeholder="SHARES" className="w-20 bg-bb-dark border border-bb-border text-bb-white px-1.5 py-1 font-mono focus:border-bb-amber focus:outline-none" />
+            <input type="number" value={newCost} onChange={e => setNewCost(e.target.value)}
+              placeholder="AVG COST" className="w-24 bg-bb-dark border border-bb-border text-bb-white px-1.5 py-1 font-mono focus:border-bb-amber focus:outline-none" />
+            <button onClick={handleAddPosition}
+              className="px-3 py-1 text-[9px] font-bold border border-bb-amber text-bb-amber hover:bg-bb-amber/10">ADD</button>
+          </div>
+          {tickerError && <div className="text-bb-red text-[9px] mt-1">{tickerError}</div>}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-full grid grid-cols-12 grid-rows-6 gap-[3px] p-[3px]">
       {/* Performance Chart */}
