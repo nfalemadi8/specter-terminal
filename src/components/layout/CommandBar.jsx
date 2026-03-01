@@ -133,7 +133,7 @@ export default function CommandBar({ onTabChange }) {
       {/* Spotlight Overlay */}
       {spotlight && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-start justify-center pt-[15vh]" onClick={() => setSpotlight(false)}>
-          <div role="dialog" aria-label="Command spotlight search" className="w-[560px] bg-bb-panel border border-bb-amber/50 shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div role="dialog" aria-label="Command spotlight search" className="w-[90vw] max-w-[560px] bg-bb-panel border border-bb-amber/50 shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center px-3 py-2 border-b border-bb-border">
               <span className="text-bb-amber text-[11px] font-bold mr-2">SPECTER &gt;</span>
               <input
@@ -195,10 +195,10 @@ export default function CommandBar({ onTabChange }) {
         </div>
       )}
 
-      {/* Bottom Command Bar */}
+      {/* Bottom Command Bar — hidden on mobile */}
       <form
         onSubmit={handleSubmit}
-        className="flex items-center px-3 py-[3px] bg-bb-dark border-t border-bb-border"
+        className="hidden sm:flex items-center px-3 py-[3px] bg-bb-dark border-t border-bb-border"
       >
         <span className="text-bb-amber text-[10px] font-bold mr-2">CMD &gt;</span>
         <input
@@ -207,16 +207,26 @@ export default function CommandBar({ onTabChange }) {
           value={input}
           onChange={e => setInput(e.target.value)}
           className="flex-1 bg-transparent text-bb-white text-[11px] outline-none placeholder-bb-muted font-mono"
-          placeholder="Type command or tab name... (Ctrl+K for search)"
+          placeholder={`Type command or tab name... (${navigator.platform?.includes('Mac') ? '⌘' : 'Ctrl'}+K for search)`}
           spellCheck={false}
           autoComplete="off"
         />
         <button type="button" onClick={() => { setSpotlight(true); setSpotlightQuery(''); setSelectedIndex(0); }}
           className="text-bb-muted text-[9px] border border-bb-border px-1.5 py-0.5 mr-2 hover:text-bb-amber hover:border-bb-amber transition-colors">
-          Ctrl+K
+          {navigator.platform?.includes('Mac') ? '⌘K' : 'Ctrl+K'}
         </button>
         <span className="text-bb-muted text-[10px]">SPECTER v3.0</span>
       </form>
+
+      {/* Mobile FAB — visible only on mobile */}
+      <button
+        type="button"
+        onClick={() => { setSpotlight(true); setSpotlightQuery(''); setSelectedIndex(0); }}
+        className="sm:hidden fixed bottom-4 right-4 z-40 w-12 h-12 bg-bb-amber text-bb-black rounded-full shadow-lg flex items-center justify-center text-lg font-bold hover:bg-bb-amber/90 transition-colors"
+        aria-label="Open command search"
+      >
+        ⌘
+      </button>
     </>
   );
 }

@@ -157,12 +157,28 @@ html, body, #root {
   stroke: var(--color-bb-border) !important;
 }
 
-/* Responsive: stack grids on small screens */
-@media (max-width: 768px) {
+/* Responsive: tablet breakpoint — 2 columns */
+@media (max-width: 1024px) and (min-width: 641px) {
   .grid-cols-12 {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(2, 1fr) !important;
   }
   .grid-cols-12 > * {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+  }
+  .grid-cols-8 {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+/* Responsive: mobile breakpoint — single column */
+@media (max-width: 640px) {
+  .grid-cols-12,
+  .grid-cols-8 {
+    grid-template-columns: 1fr !important;
+  }
+  .grid-cols-12 > *,
+  .grid-cols-8 > * {
     grid-column: span 1 !important;
     grid-row: span 1 !important;
   }
@@ -172,5 +188,14 @@ html, body, #root {
   }
   main.overflow-hidden {
     overflow: auto !important;
+  }
+  .bb-panel-header {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+  .bb-table th,
+  .bb-table td {
+    padding: 2px 4px;
+    font-size: 10px;
   }
 }

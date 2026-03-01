@@ -14,7 +14,7 @@ export default function TickerBar() {
   ];
 
   return (
-    <div className="flex items-center gap-0 px-2 py-[2px] bg-bb-black border-b border-bb-border overflow-hidden">
+    <div className="flex items-center gap-0 px-2 py-[2px] bg-bb-black border-b border-bb-border overflow-x-auto scrollbar-none">
       {tickers.map((t, i) => (
         <div key={t.symbol} className="flex items-center gap-1 px-3 shrink-0">
           <span className="text-bb-amber text-[10px] font-semibold">{t.symbol}</span>

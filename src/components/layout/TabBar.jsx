@@ -8,7 +8,7 @@ export default function TabBar({ activeTab, onTabChange }) {
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
           aria-label={`${tab.label} tab${i < 9 ? `, shortcut ${i + 1}` : ''}`}
-          className={`relative px-3 py-[5px] text-[10px] font-semibold tracking-wide whitespace-nowrap border-r border-bb-border transition-colors
+          className={`relative px-2 sm:px-3 py-[5px] text-[9px] sm:text-[10px] font-semibold tracking-wide whitespace-nowrap border-r border-bb-border transition-colors
             ${activeTab === tab.id
               ? 'bg-bb-panel text-bb-amber border-b-2 border-b-bb-amber'
               : 'text-bb-muted hover:text-bb-white hover:bg-bb-panel/50'

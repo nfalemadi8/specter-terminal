@@ -106,7 +106,7 @@ export default function App() {
       <Header />
       <TickerBar />
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
-      <main id="main-content" className="flex-1 overflow-hidden" role="main">
+      <main id="main-content" className="flex-1 overflow-auto sm:overflow-hidden" role="main">
         <TabErrorBoundary key={activeTab}>
           <Suspense fallback={<LoadingFallback />}>
             {renderTab()}
