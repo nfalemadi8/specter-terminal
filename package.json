@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:check": "vite build && echo 'Build succeeded' && ls -la docs/assets/ | head -20"
   },
   "dependencies": {
     "lodash": "^4.17.23",
