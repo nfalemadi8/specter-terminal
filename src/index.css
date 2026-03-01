@@ -140,6 +140,14 @@ html, body, #root {
   margin-bottom: 4px;
 }
 
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 .recharts-text {
   font-family: var(--font-family-mono) !important;
   font-size: 10px !important;
@@ -147,4 +155,22 @@ html, body, #root {
 
 .recharts-cartesian-grid line {
   stroke: var(--color-bb-border) !important;
+}
+
+/* Responsive: stack grids on small screens */
+@media (max-width: 768px) {
+  .grid-cols-12 {
+    grid-template-columns: 1fr !important;
+  }
+  .grid-cols-12 > * {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+  }
+  .h-screen {
+    height: auto;
+    min-height: 100vh;
+  }
+  main.overflow-hidden {
+    overflow: auto !important;
+  }
 }
