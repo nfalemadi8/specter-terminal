@@ -25,7 +25,7 @@ const systemInfo = [
   { label: 'Modules', value: `${tabs.length} tabs` },
   { label: 'Data Feed', value: 'Simulated (Demo Mode)' },
   { label: 'Theme', value: 'Bloomberg Dark' },
-  { label: 'Font', value: 'Consolas / SF Mono / Fira Code' },
+  { label: 'Font', value: 'JetBrains Mono (Consolas, SF Mono fallbacks)' },
   { label: 'Framework', value: 'React 19 + Vite 7' },
   { label: 'Charts', value: 'Recharts' },
   { label: 'Styling', value: 'Tailwind CSS v4' },

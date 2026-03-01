@@ -2,7 +2,7 @@ import { indices } from '../../data/stocks';
 import { commodities } from '../../data/commodities';
 import { forexPairs } from '../../data/forex';
 import { cryptoPairs } from '../../data/forex';
-import { formatChange, formatPercent, round } from '../../utils/format';
+import { formatPercent, round } from '../../utils/format';
 
 export default function TickerBar() {
   const tickers = [

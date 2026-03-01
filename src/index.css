@@ -199,3 +199,45 @@ html, body, #root {
     font-size: 10px;
   }
 }
+
+/* Print stylesheet */
+@media print {
+  * {
+    color: #000 !important;
+    background: #fff !important;
+    border-color: #ccc !important;
+    box-shadow: none !important;
+  }
+  body, html, #root {
+    overflow: visible !important;
+    height: auto !important;
+  }
+  .grid-cols-12,
+  .grid-cols-8 {
+    display: block !important;
+  }
+  .grid-cols-12 > *,
+  .grid-cols-8 > * {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+    page-break-inside: avoid;
+    margin-bottom: 8px;
+  }
+  .bb-panel-header {
+    color: #000 !important;
+    font-weight: 700;
+    border-bottom: 2px solid #000 !important;
+  }
+  .bb-table th {
+    color: #000 !important;
+    font-weight: 700;
+  }
+  .recharts-wrapper,
+  nav,
+  header,
+  footer,
+  .blink,
+  button {
+    display: none !important;
+  }
+}

@@ -1,0 +1,1 @@
+import{j as a}from"./index-CaGgQBbu.js";function r({title:e,children:s,className:l=""}){return a.jsxs("section",{className:`bb-panel flex flex-col min-w-0 ${l}`,"aria-label":e||void 0,children:[e&&a.jsx("div",{className:"bb-panel-header","aria-hidden":"true",children:e}),a.jsx("div",{className:"flex-1 overflow-x-auto overflow-y-auto p-2",children:s})]})}export{r as P};

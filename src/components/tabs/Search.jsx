@@ -3,7 +3,7 @@ import Panel from '../layout/Panel';
 import ExportButton from '../layout/ExportButton';
 import { stocks } from '../../data/stocks';
 import { formatNumber, formatCurrency, formatPercent, formatMcap, colorClass } from '../../utils/format';
-import { exportToCSV } from '../../utils/calculations';
+import { exportToCSV } from '../../utils/exportCsv';
 
 const FILTER_DEFS = [
   { id: 'sector', label: 'Sector', type: 'select', options: () => [...new Set(stocks.map(s => s.sector))] },

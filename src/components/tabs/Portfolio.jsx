@@ -6,7 +6,8 @@ import { portfolioHoldings, calculatePortfolioMetrics, portfolioHistory, sectorA
 import { stocks } from '../../data/stocks';
 import { formatNumber, formatCurrency, formatPercent, colorClass, round } from '../../utils/format';
 import { loadData, saveData } from '../../utils/storage';
-import { convertCurrency, exportToCSV, currencyRates } from '../../utils/calculations';
+import { convertCurrency, currencyRates } from '../../utils/calculations';
+import { exportToCSV } from '../../utils/exportCsv';
 
 const STORAGE_KEY = 'specter-portfolio';
 const GOAL_QAR = 18000000;
