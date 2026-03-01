@@ -133,12 +133,16 @@ export default function CommandBar({ onTabChange }) {
       {/* Spotlight Overlay */}
       {spotlight && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-start justify-center pt-[15vh]" onClick={() => setSpotlight(false)}>
-          <div role="dialog" aria-label="Command spotlight search" className="w-[90vw] max-w-[560px] bg-bb-panel border border-bb-amber/50 shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div role="dialog" aria-modal="true" aria-label="Command spotlight search" className="w-[90vw] max-w-[560px] bg-bb-panel border border-bb-amber/50 shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center px-3 py-2 border-b border-bb-border">
-              <span className="text-bb-amber text-[11px] font-bold mr-2">SPECTER &gt;</span>
+              <span className="text-bb-amber text-[11px] font-bold mr-2" aria-hidden="true">SPECTER &gt;</span>
               <input
                 ref={spotlightRef}
                 type="text"
+                role="combobox"
+                aria-expanded={results.length > 0}
+                aria-controls="spotlight-results"
+                aria-activedescendant={results[selectedIndex] ? `result-${selectedIndex}` : undefined}
                 value={spotlightQuery}
                 onChange={e => { setSpotlightQuery(e.target.value); setSelectedIndex(0); }}
                 onKeyDown={handleSpotlightKeyDown}
@@ -147,12 +151,12 @@ export default function CommandBar({ onTabChange }) {
                 spellCheck={false}
                 autoComplete="off"
               />
-              <span className="text-bb-muted text-[9px] border border-bb-border px-1.5 py-0.5">ESC</span>
+              <span className="text-bb-muted text-[9px] border border-bb-border px-1.5 py-0.5" aria-hidden="true">ESC</span>
             </div>
 
-            <div className="max-h-[350px] overflow-auto">
+            <div id="spotlight-results" role="listbox" className="max-h-[350px] overflow-auto" aria-label="Search results">
               {results.length > 0 ? results.map((r, i) => (
-                <div key={r.id} onClick={() => r.action()}
+                <div key={r.id} id={`result-${i}`} role="option" aria-selected={i === selectedIndex} onClick={() => r.action()}
                   className={`flex items-center px-3 py-1.5 cursor-pointer border-b border-bb-border/50 ${
                     i === selectedIndex ? 'bg-bb-amber/10' : 'hover:bg-bb-dark'
                   }`}>

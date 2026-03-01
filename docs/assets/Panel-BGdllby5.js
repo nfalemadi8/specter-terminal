@@ -1,1 +1,0 @@
-import{j as e}from"./index-C_R3uxNl.js";function r({title:a,children:s,className:l=""}){return e.jsxs("div",{className:`bb-panel flex flex-col min-w-0 ${l}`,children:[a&&e.jsx("div",{className:"bb-panel-header",children:a}),e.jsx("div",{className:"flex-1 overflow-x-auto overflow-y-auto p-2",children:s})]})}export{r as P};

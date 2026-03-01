@@ -33,10 +33,15 @@ export default function MetricTooltip({ label, children }) {
       className="relative cursor-help border-b border-dotted border-bb-muted"
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
+      onFocus={() => setShow(true)}
+      onBlur={() => setShow(false)}
+      tabIndex={0}
+      role="term"
+      aria-describedby={show ? `tip-${label}` : undefined}
     >
       {children || label}
       {show && (
-        <span className="absolute z-50 left-0 bottom-full mb-1 w-48 p-1.5 bg-bb-dark border border-bb-border text-[9px] text-bb-white leading-tight shadow-lg">
+        <span id={`tip-${label}`} role="tooltip" className="absolute z-50 left-0 bottom-full mb-1 w-48 p-1.5 bg-bb-dark border border-bb-border text-[9px] text-bb-white leading-tight shadow-lg">
           <span className="text-bb-amber font-bold">{label}</span>
           <br />
           {tip}
