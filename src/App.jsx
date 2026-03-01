@@ -25,6 +25,9 @@ import Sectors from './components/tabs/Sectors';
 import HeatMap from './components/tabs/HeatMap';
 import Alerts from './components/tabs/Alerts';
 import IPOs from './components/tabs/IPOs';
+import Search from './components/tabs/Search';
+import PortfolioGenerator from './components/tabs/PortfolioGenerator';
+import StressTest from './components/tabs/StressTest';
 import Settings from './components/tabs/Settings';
 
 export default function App() {
@@ -54,6 +57,9 @@ export default function App() {
       case 'heatmap': return <HeatMap />;
       case 'alerts': return <Alerts />;
       case 'ipos': return <IPOs />;
+      case 'search': return <Search />;
+      case 'portgen': return <PortfolioGenerator />;
+      case 'stresstest': return <StressTest />;
       case 'settings': return <Settings />;
       default: return <Dashboard />;
     }

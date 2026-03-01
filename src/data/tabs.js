@@ -21,5 +21,8 @@ export const tabs = [
   { id: 'heatmap', label: 'HEAT MAP', shortcut: null },
   { id: 'alerts', label: 'ALERTS', shortcut: null },
   { id: 'ipos', label: 'IPOs', shortcut: null },
+  { id: 'search', label: 'SEARCH', shortcut: null },
+  { id: 'portgen', label: 'PORT GEN', shortcut: null },
+  { id: 'stresstest', label: 'STRESS TEST', shortcut: null },
   { id: 'settings', label: 'SETTINGS', shortcut: null },
 ];
