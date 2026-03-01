@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, CartesianGrid } from 'recharts';
 import Panel from '../layout/Panel';
 import { forexPairs, cryptoPairs } from '../../data/forex';
-import { formatNumber, formatPercent, formatChange, colorClass } from '../../utils/format';
+import { formatNumber, formatPercent, formatChange, colorClass, round } from '../../utils/format';
 import { currencyRates, convertCurrency } from '../../utils/calculations';
 
 const tt = { contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' }, labelStyle: { color: '#ffbf00', fontSize: '10px' } };
@@ -15,7 +15,7 @@ function genFXHistory(baseRate, days = 60) {
     const d = new Date(); d.setDate(d.getDate() - i);
     rate += (Math.random() - 0.5) * baseRate * 0.005;
     rate = Math.max(rate * 0.95, rate);
-    data.push({ date: d.toISOString().split('T')[0], rate: parseFloat(rate.toFixed(4)) });
+    data.push({ date: d.toISOString().split('T')[0], rate: round(rate, 4) });
   }
   return data;
 }
@@ -32,7 +32,7 @@ function calcStrength(pairs) {
     str[base] = (str[base] || 0) + p.changePct;
     str[quote] = (str[quote] || 0) - p.changePct;
   });
-  return Object.entries(str).map(([cur, val]) => ({ currency: cur, strength: parseFloat(val.toFixed(3)) })).sort((a, b) => b.strength - a.strength);
+  return Object.entries(str).map(([cur, val]) => ({ currency: cur, strength: round(val, 3) })).sort((a, b) => b.strength - a.strength);
 }
 
 export default function FXMonitor() {
@@ -53,7 +53,7 @@ export default function FXMonitor() {
       const row = { base };
       crossCurs.forEach(quote => {
         if (base === quote) { row[quote] = 1; return; }
-        row[quote] = parseFloat(convertCurrency(1, base, quote).toFixed(4));
+        row[quote] = round(convertCurrency(1, base, quote), 4);
       });
       return row;
     });
@@ -89,7 +89,7 @@ export default function FXMonitor() {
             <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
             <XAxis dataKey="date" tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => v.slice(5)} interval={12} />
             <YAxis domain={['dataMin', 'dataMax']} tick={{ fill: '#6a6a6a', fontSize: 8 }} width={55} />
-            <Tooltip {...tt} formatter={v => v.toFixed(4)} />
+            <Tooltip {...tt} formatter={v => round(v, 4)} />
             <Area type="monotone" dataKey="rate" stroke="#4a9eff" fill="url(#fxG)" strokeWidth={1.5} dot={false} />
           </AreaChart>
         </ResponsiveContainer>
@@ -101,7 +101,7 @@ export default function FXMonitor() {
           <BarChart data={strength} layout="vertical" margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
             <XAxis type="number" tick={{ fill: '#6a6a6a', fontSize: 8 }} />
             <YAxis type="category" dataKey="currency" tick={{ fill: '#6a6a6a', fontSize: 9 }} width={35} />
-            <Tooltip {...tt} formatter={v => v.toFixed(3)} />
+            <Tooltip {...tt} formatter={v => round(v, 3)} />
             <Bar dataKey="strength" radius={[0, 2, 2, 0]}>
               {strength.map(s => <Cell key={s.currency} fill={s.strength >= 0 ? '#00d26a' : '#ff3b3b'} />)}
             </Bar>
@@ -161,7 +161,7 @@ export default function FXMonitor() {
                 <td className="text-bb-amber font-bold">{row.base}</td>
                 {crossCurs.map(c => (
                   <td key={c} className={`text-right ${row.base === c ? 'text-bb-muted' : ''}`}>
-                    {row.base === c ? '—' : row[c].toFixed(4)}
+                    {row.base === c ? '—' : round(row[c], 4)}
                   </td>
                 ))}
               </tr>
@@ -179,7 +179,7 @@ export default function FXMonitor() {
             <div className={`text-[10px] font-bold ${colorClass(selectedPair.changePct)}`}>{formatPercent(selectedPair.changePct)}</div>
           </div>
           <table className="bb-table"><tbody>
-            {[['Spread', ((selectedPair.ask - selectedPair.bid) * 10000).toFixed(1) + ' pips'], ['High', formatNumber(selectedPair.high, 4)], ['Low', formatNumber(selectedPair.low, 4)]].map(([l, v]) => (
+            {[['Spread', round((selectedPair.ask - selectedPair.bid) * 10000, 1) + ' pips'], ['High', formatNumber(selectedPair.high, 4)], ['Low', formatNumber(selectedPair.low, 4)]].map(([l, v]) => (
               <tr key={l}><td className="text-bb-muted">{l}</td><td className="text-right font-bold">{v}</td></tr>
             ))}
           </tbody></table>

@@ -1,5 +1,5 @@
 import Panel from '../layout/Panel';
-import { colorClass, formatPercent } from '../../utils/format';
+import { colorClass, formatPercent, round } from '../../utils/format';
 
 const upcomingIPOs = [
   { company: 'Reddit Inc.', symbol: 'RDDT', exchange: 'NYSE', priceRange: '$31-34', date: 'Mar 2024', sector: 'Technology', underwriter: 'Morgan Stanley' },
@@ -70,8 +70,8 @@ export default function IPOs() {
               <tr key={ipo.symbol}>
                 <td className="text-bb-white">{ipo.company}</td>
                 <td className="text-bb-amber">{ipo.symbol}</td>
-                <td className="text-right">${ipo.ipoPrice.toFixed(2)}</td>
-                <td className="text-right">${ipo.current.toFixed(2)}</td>
+                <td className="text-right">${round(ipo.ipoPrice, 2)}</td>
+                <td className="text-right">${round(ipo.current, 2)}</td>
                 <td className="text-bb-muted">{ipo.date}</td>
                 <td className={`text-right font-bold ${colorClass(ipo.return)}`}>{formatPercent(ipo.return)}</td>
                 <td className="text-bb-muted">{ipo.sector}</td>

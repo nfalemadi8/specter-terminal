@@ -1,49 +1,61 @@
+// Safe rounding that avoids floating-point bugs with toFixed
+export function round(value, decimals = 2) {
+  if (value === null || value === undefined || isNaN(value)) return 0;
+  return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+}
+
 export function formatNumber(num, decimals = 2) {
   if (num === null || num === undefined) return '-';
-  return num.toLocaleString('en-US', {
+  return round(num, decimals).toLocaleString('en-US', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
 }
 
-export function formatCurrency(num, decimals = 2) {
+export function formatCurrency(num, decimals = 2, currency = 'USD') {
   if (num === null || num === undefined) return '-';
-  return '$' + formatNumber(num, decimals);
+  const prefixes = { USD: '$', QAR: 'QR ', AED: 'AED ', EUR: '€', GBP: '£', SAR: 'SR ', JPY: '¥' };
+  const prefix = prefixes[currency] || '$';
+  const abs = Math.abs(num);
+  if (abs >= 1e12) return prefix + round(num / 1e12, 2) + 'T';
+  if (abs >= 1e9) return prefix + round(num / 1e9, 2) + 'B';
+  if (abs >= 1e6) return prefix + round(num / 1e6, 2) + 'M';
+  if (abs >= 1e3 && decimals === 0) return prefix + round(num / 1e3, 1) + 'K';
+  return prefix + formatNumber(num, decimals);
 }
 
 export function formatPercent(num, decimals = 2) {
   if (num === null || num === undefined) return '-';
   const sign = num > 0 ? '+' : '';
-  return sign + num.toFixed(decimals) + '%';
+  return sign + round(num, decimals) + '%';
 }
 
 export function formatChange(num, decimals = 2) {
   if (num === null || num === undefined) return '-';
   const sign = num > 0 ? '+' : '';
-  return sign + num.toFixed(decimals);
+  return sign + round(num, decimals);
 }
 
 export function formatLargeNumber(num) {
   if (num === null || num === undefined) return '-';
   if (typeof num === 'string') {
-    // Try to parse numeric strings
     const parsed = parseFloat(num.replace(/[^0-9.-]/g, ''));
     if (isNaN(parsed)) return num;
     num = parsed;
   }
-  if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T';
-  if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
-  if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
-  if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K';
+  if (num >= 1e12) return round(num / 1e12, 2) + 'T';
+  if (num >= 1e9) return round(num / 1e9, 2) + 'B';
+  if (num >= 1e6) return round(num / 1e6, 2) + 'M';
+  if (num >= 1e3) return round(num / 1e3, 2) + 'K';
   return num.toString();
 }
 
 export function formatMcap(num) {
   if (num === null || num === undefined) return '-';
   if (typeof num === 'string') return num;
-  if (num >= 1e12) return '$' + (num / 1e12).toFixed(2) + 'T';
-  if (num >= 1e9) return '$' + (num / 1e9).toFixed(2) + 'B';
-  if (num >= 1e6) return '$' + (num / 1e6).toFixed(2) + 'M';
+  if (num >= 1e12) return '$' + round(num / 1e12, 2) + 'T';
+  if (num >= 1e9) return '$' + round(num / 1e9, 2) + 'B';
+  if (num >= 1e6) return '$' + round(num / 1e6, 2) + 'M';
   return '$' + num.toLocaleString('en-US');
 }
 

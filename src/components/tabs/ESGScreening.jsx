@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, BarChart, Bar, Cell, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
-import { formatNumber, formatPercent, formatMcap, colorClass } from '../../utils/format';
+import { formatNumber, formatPercent, formatMcap, colorClass, round } from '../../utils/format';
 
 const tt = { contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' }, labelStyle: { color: '#ffbf00', fontSize: '10px' } };
 
@@ -114,7 +114,7 @@ export default function ESGScreening() {
             <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
             <XAxis dataKey="esg" name="ESG" tick={{ fill: '#6a6a6a', fontSize: 8 }} label={{ value: 'ESG Score', position: 'bottom', fill: '#6a6a6a', fontSize: 8, offset: -2 }} />
             <YAxis dataKey="return" name="Return (%)" tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => v + '%'} />
-            <Tooltip {...tt} formatter={(v, name) => name === 'ESG' ? v : v.toFixed(2) + '%'} />
+            <Tooltip {...tt} formatter={(v, name) => name === 'ESG' ? v : round(v, 2) + '%'} />
             <Scatter data={scatter} fill="#4a9eff" r={4}>
               {scatter.map(s => <Cell key={s.ticker} fill={esgTier(s.esg).color} />)}
             </Scatter>

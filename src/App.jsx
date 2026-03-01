@@ -1,46 +1,48 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import Header from './components/layout/Header';
 import TickerBar from './components/layout/TickerBar';
 import TabBar from './components/layout/TabBar';
 import CommandBar from './components/layout/CommandBar';
-import Dashboard from './components/tabs/Dashboard';
-import Equities from './components/tabs/Equities';
-import FixedIncome from './components/tabs/FixedIncome';
-import Commodities from './components/tabs/Commodities';
-import Forex from './components/tabs/Forex';
-import Crypto from './components/tabs/Crypto';
-import Indices from './components/tabs/Indices';
-import Options from './components/tabs/Options';
-import Futures from './components/tabs/Futures';
-import ETFs from './components/tabs/ETFs';
-import News from './components/tabs/News';
-import Economic from './components/tabs/Economic';
-import Earnings from './components/tabs/Earnings';
-import Portfolio from './components/tabs/Portfolio';
-import Watchlist from './components/tabs/Watchlist';
-import Screener from './components/tabs/Screener';
-import Technicals from './components/tabs/Technicals';
-import Fundamentals from './components/tabs/Fundamentals';
-import Sectors from './components/tabs/Sectors';
-import HeatMap from './components/tabs/HeatMap';
-import Alerts from './components/tabs/Alerts';
-import IPOs from './components/tabs/IPOs';
-import Search from './components/tabs/Search';
-import PortfolioGenerator from './components/tabs/PortfolioGenerator';
-import StressTest from './components/tabs/StressTest';
-import PeerComparison from './components/tabs/PeerComparison';
-import SupplyChain from './components/tabs/SupplyChain';
-import EconCalendar from './components/tabs/EconCalendar';
-import FXMonitor from './components/tabs/FXMonitor';
-import YieldCurve from './components/tabs/YieldCurve';
-import ESGScreening from './components/tabs/ESGScreening';
-import MATracker from './components/tabs/MATracker';
-import Backtest from './components/tabs/Backtest';
-import Billionaires from './components/tabs/Billionaires';
-import AIInsights from './components/tabs/AIInsights';
-import CustomFields from './components/tabs/CustomFields';
-import Reference from './components/tabs/Reference';
-import Settings from './components/tabs/Settings';
+import LoadingFallback from './components/layout/LoadingFallback';
+
+const Dashboard = lazy(() => import('./components/tabs/Dashboard'));
+const Equities = lazy(() => import('./components/tabs/Equities'));
+const FixedIncome = lazy(() => import('./components/tabs/FixedIncome'));
+const Commodities = lazy(() => import('./components/tabs/Commodities'));
+const Forex = lazy(() => import('./components/tabs/Forex'));
+const Crypto = lazy(() => import('./components/tabs/Crypto'));
+const Indices = lazy(() => import('./components/tabs/Indices'));
+const Options = lazy(() => import('./components/tabs/Options'));
+const Futures = lazy(() => import('./components/tabs/Futures'));
+const ETFs = lazy(() => import('./components/tabs/ETFs'));
+const News = lazy(() => import('./components/tabs/News'));
+const Economic = lazy(() => import('./components/tabs/Economic'));
+const Earnings = lazy(() => import('./components/tabs/Earnings'));
+const Portfolio = lazy(() => import('./components/tabs/Portfolio'));
+const Watchlist = lazy(() => import('./components/tabs/Watchlist'));
+const Screener = lazy(() => import('./components/tabs/Screener'));
+const Technicals = lazy(() => import('./components/tabs/Technicals'));
+const Fundamentals = lazy(() => import('./components/tabs/Fundamentals'));
+const Sectors = lazy(() => import('./components/tabs/Sectors'));
+const HeatMap = lazy(() => import('./components/tabs/HeatMap'));
+const Alerts = lazy(() => import('./components/tabs/Alerts'));
+const IPOs = lazy(() => import('./components/tabs/IPOs'));
+const Search = lazy(() => import('./components/tabs/Search'));
+const PortfolioGenerator = lazy(() => import('./components/tabs/PortfolioGenerator'));
+const StressTest = lazy(() => import('./components/tabs/StressTest'));
+const PeerComparison = lazy(() => import('./components/tabs/PeerComparison'));
+const SupplyChain = lazy(() => import('./components/tabs/SupplyChain'));
+const EconCalendar = lazy(() => import('./components/tabs/EconCalendar'));
+const FXMonitor = lazy(() => import('./components/tabs/FXMonitor'));
+const YieldCurve = lazy(() => import('./components/tabs/YieldCurve'));
+const ESGScreening = lazy(() => import('./components/tabs/ESGScreening'));
+const MATracker = lazy(() => import('./components/tabs/MATracker'));
+const Backtest = lazy(() => import('./components/tabs/Backtest'));
+const Billionaires = lazy(() => import('./components/tabs/Billionaires'));
+const AIInsights = lazy(() => import('./components/tabs/AIInsights'));
+const CustomFields = lazy(() => import('./components/tabs/CustomFields'));
+const Reference = lazy(() => import('./components/tabs/Reference'));
+const Settings = lazy(() => import('./components/tabs/Settings'));
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -95,7 +97,9 @@ export default function App() {
       <TickerBar />
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
       <main className="flex-1 overflow-hidden">
-        {renderTab()}
+        <Suspense fallback={<LoadingFallback />}>
+          {renderTab()}
+        </Suspense>
       </main>
       <CommandBar onTabChange={setActiveTab} />
     </div>

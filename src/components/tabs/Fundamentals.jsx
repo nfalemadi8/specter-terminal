@@ -3,7 +3,7 @@ import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContai
 import Panel from '../layout/Panel';
 import { stocks, generatePriceHistory } from '../../data/stocks';
 import { calculateDCF } from '../../utils/calculations';
-import { formatNumber, formatCurrency, formatPercent, formatMcap, colorClass } from '../../utils/format';
+import { formatNumber, formatCurrency, formatPercent, formatMcap, colorClass, round } from '../../utils/format';
 
 const chartTooltip = {
   contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' },
@@ -24,14 +24,14 @@ function shariahCheck(stock) {
       value: stock.debtToAssets,
       threshold: SHARIAH.debtToAssets.max,
       pass: stock.debtToAssets < SHARIAH.debtToAssets.max,
-      display: `${(stock.debtToAssets * 100).toFixed(1)}% < 30%`,
+      display: `${round(stock.debtToAssets * 100, 1)}% < 30%`,
     },
     {
       name: 'Debt / Equity',
       value: stock.debtEquity,
       threshold: SHARIAH.debtEquity.max,
       pass: stock.debtEquity < SHARIAH.debtEquity.max,
-      display: `${(stock.debtEquity * 100).toFixed(1)}% < 33%`,
+      display: `${round(stock.debtEquity * 100, 1)}% < 33%`,
     },
     {
       name: 'Haram Revenue',
@@ -153,7 +153,7 @@ export default function Fundamentals() {
           <div className="w-44 shrink-0 p-1 space-y-1 border-r border-bb-border text-[10px]">
             <div className="text-2xl font-bold text-bb-white">{formatCurrency(stock.price)}</div>
             <div className={`text-sm font-bold ${colorClass(stock.change)}`}>
-              {stock.change > 0 ? '+' : ''}{stock.change.toFixed(2)} ({formatPercent(stock.changePct)})
+              {stock.change > 0 ? '+' : ''}{round(stock.change, 2)} ({formatPercent(stock.changePct)})
             </div>
             <div className="pt-1 space-y-0.5">
               <div><span className="text-bb-muted">Sector: </span>{stock.sector}</div>
@@ -175,7 +175,7 @@ export default function Fundamentals() {
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="date" tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => v.slice(5)} interval={20} />
-                <YAxis domain={['dataMin', 'dataMax']} tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => '$' + v.toFixed(0)} width={45} />
+                <YAxis domain={['dataMin', 'dataMax']} tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => '$' + round(v, 0)} width={45} />
                 <Tooltip {...chartTooltip} formatter={v => formatCurrency(v)} />
                 <Area type="monotone" dataKey="price" stroke={stock.change >= 0 ? '#00d26a' : '#ff3b3b'} fill="url(#saGrad)" strokeWidth={1.5} dot={false} />
               </AreaChart>
@@ -257,8 +257,8 @@ export default function Fundamentals() {
               ['ROE', stock.roe + '%'],
               ['Net Margin', stock.margin + '%'],
               ['Rev Growth', formatPercent(stock.revGrowth)],
-              ['D/E Ratio', stock.debtEquity.toFixed(2)],
-              ['D/A Ratio', (stock.debtToAssets * 100).toFixed(1) + '%'],
+              ['D/E Ratio', round(stock.debtEquity, 2)],
+              ['D/A Ratio', round(stock.debtToAssets * 100, 1) + '%'],
               ['Volume', stock.volume],
             ].map(([label, val]) => (
               <tr key={label}>
@@ -316,7 +316,7 @@ export default function Fundamentals() {
               <div className="text-bb-muted text-[9px]">FAIR VALUE</div>
               <div className="text-xl font-bold text-bb-white">{formatCurrency(dcfValue)}</div>
               <div className={`text-sm font-bold ${colorClass(dcfUpside)}`}>
-                {dcfUpside > 0 ? '+' : ''}{dcfUpside.toFixed(1)}% {dcfUpside >= 0 ? 'Upside' : 'Downside'}
+                {dcfUpside > 0 ? '+' : ''}{round(dcfUpside, 1)}% {dcfUpside >= 0 ? 'Upside' : 'Downside'}
               </div>
               <div className="text-bb-muted text-[9px] mt-0.5">vs. Current: {formatCurrency(stock.price)}</div>
             </div>
@@ -350,7 +350,7 @@ export default function Fundamentals() {
                     <div key={sc.label} className="border border-bb-border p-1">
                       <div className="text-bb-muted">{sc.label}</div>
                       <div className="font-bold text-bb-white">{formatCurrency(val)}</div>
-                      <div className={`text-[8px] ${colorClass(up)}`}>{up > 0 ? '+' : ''}{up.toFixed(1)}%</div>
+                      <div className={`text-[8px] ${colorClass(up)}`}>{up > 0 ? '+' : ''}{round(up, 1)}%</div>
                     </div>
                   );
                 })}

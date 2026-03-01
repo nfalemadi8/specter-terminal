@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, BarChart, Bar, Cell } from 'recharts';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
-import { formatCurrency, formatPercent, formatNumber, colorClass } from '../../utils/format';
+import { formatCurrency, formatPercent, formatNumber, colorClass, round } from '../../utils/format';
 
 const tt = { contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' }, labelStyle: { color: '#ffbf00', fontSize: '10px' } };
 
@@ -47,7 +47,7 @@ function runBacktest(strategy, capital, days) {
     const dd = (equity - maxEquity) / maxEquity;
     if (dd < maxDrawdown) maxDrawdown = dd;
 
-    equityCurve.push({ date: date.toISOString().split('T')[0], equity: parseFloat(equity.toFixed(2)), drawdown: parseFloat((dd * 100).toFixed(2)) });
+    equityCurve.push({ date: date.toISOString().split('T')[0], equity: round(equity, 2), drawdown: round(dd * 100, 2) });
 
     // Generate trades on rebalance days
     if (i % 21 === 0 && i > 0) {
@@ -56,8 +56,8 @@ function runBacktest(strategy, capital, days) {
       trades.push({
         date: date.toISOString().split('T')[0],
         action: tradeReturn > 0 ? 'WIN' : 'LOSS',
-        return: parseFloat(tradeReturn.toFixed(2)),
-        equity: parseFloat(equity.toFixed(0)),
+        return: round(tradeReturn, 2),
+        equity: round(equity, 0),
       });
     }
   }
@@ -75,7 +75,7 @@ function runBacktest(strategy, capital, days) {
   for (let i = 0; i < Math.min(12, Math.floor(days / 21)); i++) {
     const slice = dailyReturns.slice(i * 21, (i + 1) * 21);
     const monthRet = slice.reduce((s, r) => s + r, 0) * 100;
-    monthlyReturns.push({ month: `M${i + 1}`, return: parseFloat(monthRet.toFixed(2)) });
+    monthlyReturns.push({ month: `M${i + 1}`, return: round(monthRet, 2) });
   }
 
   return {
@@ -113,7 +113,7 @@ export default function Backtest() {
     let eq = capital;
     return results.equityCurve.map(p => {
       eq *= (1 + 0.1 / 252 + (Math.random() - 0.5) * 0.012);
-      return { ...p, benchmark: parseFloat(eq.toFixed(2)) };
+      return { ...p, benchmark: round(eq, 2) };
     });
   }, [hasRun, results, capital]);
 
@@ -141,7 +141,7 @@ export default function Backtest() {
               className="w-full h-1 appearance-none bg-bb-border rounded cursor-pointer accent-[#ffbf00]" />
           </div>
           <div>
-            <div className="flex justify-between text-bb-muted mb-0.5"><span>Backtest Period</span><span className="text-bb-white">{days} days ({(days / 252).toFixed(1)}Y)</span></div>
+            <div className="flex justify-between text-bb-muted mb-0.5"><span>Backtest Period</span><span className="text-bb-white">{days} days ({round(days / 252, 1)}Y)</span></div>
             <input type="range" min={63} max={1260} step={63} value={days} onChange={e => { setDays(+e.target.value); setHasRun(false); }}
               className="w-full h-1 appearance-none bg-bb-border rounded cursor-pointer accent-[#ffbf00]" />
           </div>
@@ -169,7 +169,7 @@ export default function Backtest() {
               <LineChart data={benchmark || results.equityCurve}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
                 <XAxis dataKey="date" tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => v.slice(5)} interval={Math.floor(days / 6)} />
-                <YAxis tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => '$' + (v / 1000).toFixed(0) + 'K'} />
+                <YAxis tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => '$' + round(v / 1000, 0) + 'K'} />
                 <Tooltip {...tt} formatter={v => formatCurrency(v, 0)} />
                 <Line type="monotone" dataKey="equity" stroke="#00d26a" strokeWidth={2} dot={false} name="Strategy" />
                 {benchmark && <Line type="monotone" dataKey="benchmark" stroke="#6a6a6a" strokeWidth={1} dot={false} name="Benchmark" strokeDasharray="3 3" />}
@@ -188,12 +188,12 @@ export default function Backtest() {
               </div>
               <table className="bb-table"><tbody>
                 {[
-                  ['Sharpe Ratio', results.sharpe.toFixed(2), results.sharpe > 1 ? 'text-bb-green' : results.sharpe > 0.5 ? 'text-bb-yellow' : 'text-bb-red'],
+                  ['Sharpe Ratio', round(results.sharpe, 2), results.sharpe > 1 ? 'text-bb-green' : results.sharpe > 0.5 ? 'text-bb-yellow' : 'text-bb-red'],
                   ['Ann. Return', formatPercent(results.annualReturn * 100), colorClass(results.annualReturn)],
                   ['Ann. Volatility', formatPercent(results.annualVol * 100), ''],
                   ['Max Drawdown', formatPercent(results.maxDrawdown * 100), 'text-bb-red'],
-                  ['Calmar Ratio', results.calmar.toFixed(2), ''],
-                  ['Win Rate', (results.winRate * 100).toFixed(1) + '%', results.winRate > 0.5 ? 'text-bb-green' : 'text-bb-red'],
+                  ['Calmar Ratio', round(results.calmar, 2), ''],
+                  ['Win Rate', round(results.winRate * 100, 1) + '%', results.winRate > 0.5 ? 'text-bb-green' : 'text-bb-red'],
                   ['Wins / Losses', `${results.wins} / ${results.losses}`, ''],
                 ].map(([l, v, cls]) => (
                   <tr key={l}><td className="text-bb-muted">{l}</td><td className={`text-right font-bold ${cls}`}>{v}</td></tr>

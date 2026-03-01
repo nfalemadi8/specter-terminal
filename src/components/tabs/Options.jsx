@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from 'recharts';
 import Panel from '../layout/Panel';
-import { formatNumber, formatCurrency, colorClass } from '../../utils/format';
+import { formatNumber, formatCurrency, colorClass, round } from '../../utils/format';
 import { blackScholes, calculateGreeks } from '../../utils/calculations';
 
 const chainData = {
@@ -85,7 +85,7 @@ export default function Options() {
           pnl += leg.dir * (Math.max(0, strike - s) - premium);
         }
       });
-      points.push({ price: parseFloat(s.toFixed(2)), pnl: parseFloat((pnl * 100).toFixed(2)) });
+      points.push({ price: round(s, 2), pnl: round(pnl * 100, 2) });
     }
     return points;
   }, [strategyId, stratStrike]);
@@ -105,7 +105,7 @@ export default function Options() {
                 <td className="text-right">{formatNumber(c.ask)}</td>
                 <td className="text-right text-bb-muted">{c.volume.toLocaleString()}</td>
                 <td className="text-right text-bb-muted">{c.oi.toLocaleString()}</td>
-                <td className="text-right">{(c.iv * 100).toFixed(1)}%</td>
+                <td className="text-right">{round(c.iv * 100, 1)}%</td>
                 <td className="text-center text-bb-amber font-bold">{formatNumber(c.strike, 1)}</td>
               </tr>
             ))}
@@ -127,7 +127,7 @@ export default function Options() {
                 <td className="text-right">{formatNumber(p.ask)}</td>
                 <td className="text-right text-bb-muted">{p.volume.toLocaleString()}</td>
                 <td className="text-right text-bb-muted">{p.oi.toLocaleString()}</td>
-                <td className="text-right">{(p.iv * 100).toFixed(1)}%</td>
+                <td className="text-right">{round(p.iv * 100, 1)}%</td>
               </tr>
             ))}
           </tbody>
@@ -158,10 +158,10 @@ export default function Options() {
           <div className="border-t border-bb-border pt-1.5">
             <div className="text-bb-muted text-[9px] mb-1">GREEKS</div>
             {[
-              ['Delta (Δ)', greeks.delta.toFixed(4), '#4a9eff'],
-              ['Gamma (Γ)', greeks.gamma.toFixed(6), '#00d26a'],
-              ['Theta (Θ)', greeks.theta.toFixed(4), '#ff3b3b'],
-              ['Vega (ν)', greeks.vega.toFixed(4), '#ffd700'],
+              ['Delta (Δ)', round(greeks.delta, 4), '#4a9eff'],
+              ['Gamma (Γ)', round(greeks.gamma, 6), '#00d26a'],
+              ['Theta (Θ)', round(greeks.theta, 4), '#ff3b3b'],
+              ['Vega (ν)', round(greeks.vega, 4), '#ffd700'],
             ].map(([label, val, color]) => (
               <div key={label} className="flex items-center justify-between py-0.5">
                 <span className="text-bb-muted">{label}</span>
@@ -179,7 +179,7 @@ export default function Options() {
             <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
             <XAxis dataKey="strike" tick={{ fill: '#6a6a6a', fontSize: 8 }} />
             <YAxis tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => v + '%'} domain={['dataMin - 1', 'dataMax + 1']} />
-            <Tooltip {...tt} formatter={v => v.toFixed(1) + '%'} />
+            <Tooltip {...tt} formatter={v => round(v, 1) + '%'} />
             <ReferenceLine x={underlyingPrice} stroke="#ffbf00" strokeDasharray="3 3" />
             <Line type="monotone" dataKey="callIV" stroke="#00d26a" strokeWidth={2} dot={{ r: 3 }} name="Call IV" />
             <Line type="monotone" dataKey="putIV" stroke="#ff3b3b" strokeWidth={2} dot={{ r: 3 }} name="Put IV" />

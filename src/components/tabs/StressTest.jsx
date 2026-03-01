@@ -3,7 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LineCh
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
 import { portfolioHoldings, calculatePortfolioMetrics } from '../../data/portfolio';
-import { formatCurrency, formatPercent, colorClass } from '../../utils/format';
+import { formatCurrency, formatPercent, colorClass, round } from '../../utils/format';
 
 const chartTooltip = {
   contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' },
@@ -272,7 +272,7 @@ export default function StressTest() {
           </div>
           <div className="text-center py-1.5 border border-bb-border">
             <div className="text-bb-muted text-[9px]">PORTFOLIO BETA</div>
-            <div className="font-bold text-bb-white">{results.avgBeta.toFixed(2)}</div>
+            <div className="font-bold text-bb-white">{round(results.avgBeta, 2)}</div>
           </div>
         </div>
       </Panel>
@@ -284,7 +284,7 @@ export default function StressTest() {
             {[
               ['VaR (95%, 1d)', formatCurrency(results.var95, 0), 'text-bb-red'],
               ['VaR (99%, 1d)', formatCurrency(results.var99, 0), 'text-bb-red'],
-              ['Max DD (holding)', results.maxDrawdown.toFixed(1) + '%', 'text-bb-red'],
+              ['Max DD (holding)', round(results.maxDrawdown, 1) + '%', 'text-bb-red'],
               ['Worst', results.worstHolding.symbol, colorClass(results.worstHolding.pnlPct)],
               ['Best', results.bestHolding.symbol, colorClass(results.bestHolding.pnlPct)],
             ].map(([label, val, cls]) => (
@@ -303,7 +303,7 @@ export default function StressTest() {
           <LineChart data={drawdownPath} margin={{ top: 5, right: 10, bottom: 5, left: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
             <XAxis dataKey="day" tick={{ fill: '#6a6a6a', fontSize: 8 }} label={{ value: 'Days', position: 'bottom', fill: '#6a6a6a', fontSize: 8, offset: -2 }} />
-            <YAxis tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => '$' + (v / 1000).toFixed(0) + 'K'} domain={['dataMin', 'dataMax']} />
+            <YAxis tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => '$' + round(v / 1000, 0) + 'K'} domain={['dataMin', 'dataMax']} />
             <Tooltip {...chartTooltip} formatter={v => formatCurrency(v, 0)} />
             <Line type="monotone" dataKey="value" stroke="#ff3b3b" strokeWidth={2} dot={false} />
           </LineChart>
@@ -314,9 +314,9 @@ export default function StressTest() {
       <Panel title="Multi-Scenario Comparison" className="col-span-3 row-span-2">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={comparison} margin={{ top: 5, right: 5, bottom: 5, left: 5 }} layout="vertical">
-            <XAxis type="number" tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => v.toFixed(0) + '%'} />
+            <XAxis type="number" tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => round(v, 0) + '%'} />
             <YAxis type="category" dataKey="name" tick={{ fill: '#6a6a6a', fontSize: 8 }} width={65} />
-            <Tooltip {...chartTooltip} formatter={v => v.toFixed(1) + '%'} />
+            <Tooltip {...chartTooltip} formatter={v => round(v, 1) + '%'} />
             <Bar dataKey="totalPnlPct" radius={[0, 2, 2, 0]}>
               {comparison.map(c => (
                 <Cell key={c.name} fill={c.totalPnlPct >= 0 ? '#00d26a' : '#ff3b3b'} />
@@ -350,8 +350,8 @@ export default function StressTest() {
                 <td className="text-right">{h.shares}</td>
                 <td className="text-right">{formatCurrency(h.currentValue, 0)}</td>
                 <td className="text-right">{formatCurrency(h.stressedValue, 0)}</td>
-                <td className="text-right">{h.beta.toFixed(2)}</td>
-                <td className={`text-right font-bold ${colorClass(h.shock)}`}>{h.shock > 0 ? '+' : ''}{h.shock.toFixed(1)}%</td>
+                <td className="text-right">{round(h.beta, 2)}</td>
+                <td className={`text-right font-bold ${colorClass(h.shock)}`}>{h.shock > 0 ? '+' : ''}{round(h.shock, 1)}%</td>
                 <td className={`text-right font-bold ${colorClass(h.pnl)}`}>{formatCurrency(h.pnl, 0)}</td>
                 <td className={`text-right font-bold ${colorClass(h.pnlPct)}`}>{formatPercent(h.pnlPct)}</td>
               </tr>
@@ -361,7 +361,7 @@ export default function StressTest() {
               <td className="font-bold text-bb-white" colSpan={3}>TOTAL</td>
               <td className="text-right font-bold">{formatCurrency(results.totalCurrent, 0)}</td>
               <td className="text-right font-bold">{formatCurrency(results.totalStressed, 0)}</td>
-              <td className="text-right font-bold">{results.avgBeta.toFixed(2)}</td>
+              <td className="text-right font-bold">{round(results.avgBeta, 2)}</td>
               <td></td>
               <td className={`text-right font-bold ${colorClass(results.totalPnl)}`}>{formatCurrency(results.totalPnl, 0)}</td>
               <td className={`text-right font-bold ${colorClass(results.totalPnlPct)}`}>{formatPercent(results.totalPnlPct)}</td>
@@ -375,7 +375,7 @@ export default function StressTest() {
           <ResponsiveContainer width="100%" height={80}>
             <BarChart data={results.holdings} margin={{ top: 2, right: 5, bottom: 0, left: 5 }}>
               <XAxis dataKey="symbol" tick={{ fill: '#6a6a6a', fontSize: 8 }} />
-              <YAxis tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => '$' + (v / 1000).toFixed(0) + 'K'} />
+              <YAxis tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => '$' + round(v / 1000, 0) + 'K'} />
               <Tooltip {...chartTooltip} formatter={v => formatCurrency(v, 0)} />
               <Bar dataKey="pnl" radius={[2, 2, 0, 0]}>
                 {results.holdings.map(h => (

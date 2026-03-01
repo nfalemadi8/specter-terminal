@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
-import { formatNumber, formatCurrency, formatPercent, colorClass } from '../../utils/format';
+import { formatNumber, formatCurrency, formatPercent, colorClass, round } from '../../utils/format';
 
 const STORAGE_KEY = 'specter_custom_fields';
 
@@ -66,7 +66,7 @@ export default function CustomFields() {
   const testFormula = () => {
     if (!newFormula.trim()) return;
     const result = safeEval(newFormula, stocks[0]);
-    setTestResult(result !== null ? `${stocks[0].ticker}: ${result.toFixed(4)}` : 'ERROR — check formula');
+    setTestResult(result !== null ? `${stocks[0].ticker}: ${round(result, 4)}` : 'ERROR — check formula');
   };
 
   // Computed table

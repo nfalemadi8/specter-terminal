@@ -7,7 +7,7 @@ import { cryptoPairs } from '../../data/forex';
 import { newsItems } from '../../data/news';
 import { economicIndicators } from '../../data/economic';
 import { portfolioHoldings, calculatePortfolioMetrics, portfolioHistory, sectorAllocation } from '../../data/portfolio';
-import { formatNumber, formatPercent, formatChange, formatCurrency, colorClass } from '../../utils/format';
+import { formatNumber, formatPercent, formatChange, formatCurrency, colorClass, round } from '../../utils/format';
 
 const spxHistory = generatePriceHistory(4567.18, 60);
 const portfolio = calculatePortfolioMetrics(portfolioHoldings);
@@ -52,7 +52,7 @@ export default function Dashboard() {
               </linearGradient>
             </defs>
             <XAxis dataKey="date" tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => v.slice(5)} interval={10} />
-            <YAxis domain={['dataMin', 'dataMax']} tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => v.toFixed(0)} width={45} />
+            <YAxis domain={['dataMin', 'dataMax']} tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => round(v, 0)} width={45} />
             <Tooltip {...chartTooltipStyle} />
             <Area type="monotone" dataKey="price" stroke="#4a9eff" fill="url(#spxGrad)" strokeWidth={1.5} dot={false} />
           </AreaChart>
@@ -150,7 +150,7 @@ export default function Dashboard() {
             {treasuries.filter((_, i) => [0, 3, 4, 6, 8, 10].includes(i)).map(t => (
               <tr key={t.maturity}>
                 <td className="text-bb-amber">{t.maturity}</td>
-                <td className="text-right">{t.yield.toFixed(2)}%</td>
+                <td className="text-right">{round(t.yield, 2)}%</td>
                 <td className={`text-right ${colorClass(t.change)}`}>{formatChange(t.change)}bp</td>
               </tr>
             ))}

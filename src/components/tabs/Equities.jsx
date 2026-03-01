@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import Panel from '../layout/Panel';
 import { stocks, generatePriceHistory } from '../../data/stocks';
-import { formatNumber, formatPercent, formatChange, colorClass } from '../../utils/format';
+import { formatNumber, formatPercent, formatChange, colorClass, round } from '../../utils/format';
 
 const chartTooltip = {
   contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' },
@@ -82,7 +82,7 @@ export default function Equities() {
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={history.slice(-30)}>
               <XAxis dataKey="date" tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => v.slice(8)} />
-              <YAxis tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => (v / 1e6).toFixed(0) + 'M'} width={40} />
+              <YAxis tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => round(v / 1e6, 0) + 'M'} width={40} />
               <Tooltip {...chartTooltip} />
               <Bar dataKey="volume" fill="#4a9eff" opacity={0.6} />
             </BarChart>

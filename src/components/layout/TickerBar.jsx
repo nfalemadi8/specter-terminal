@@ -2,7 +2,7 @@ import { indices } from '../../data/stocks';
 import { commodities } from '../../data/commodities';
 import { forexPairs } from '../../data/forex';
 import { cryptoPairs } from '../../data/forex';
-import { formatChange, formatPercent } from '../../utils/format';
+import { formatChange, formatPercent, round } from '../../utils/format';
 
 export default function TickerBar() {
   const tickers = [
@@ -21,7 +21,7 @@ export default function TickerBar() {
           <span className="text-bb-white text-[10px]">
             {typeof t.price === 'number' && t.price > 1000
               ? t.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-              : t.price.toFixed(t.price < 10 ? 4 : 2)}
+              : round(t.price, t.price < 10 ? 4 : 2)}
           </span>
           <span className={`text-[10px] ${t.change >= 0 ? 'text-bb-green' : 'text-bb-red'}`}>
             {formatPercent(t.change)}

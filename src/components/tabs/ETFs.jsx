@@ -1,5 +1,5 @@
 import Panel from '../layout/Panel';
-import { formatNumber, formatPercent, formatChange, colorClass } from '../../utils/format';
+import { formatNumber, formatPercent, formatChange, colorClass, round } from '../../utils/format';
 
 const etfData = [
   { symbol: 'SPY', name: 'SPDR S&P 500', price: 456.72, change: 2.68, changePct: 0.59, volume: '68.2M', aum: '480.2B', expense: 0.09, category: 'Large Blend' },
@@ -48,7 +48,7 @@ export default function ETFs() {
                 <td className={`text-right ${colorClass(e.changePct)}`}>{formatPercent(e.changePct)}</td>
                 <td className="text-right text-bb-muted">{e.volume}</td>
                 <td className="text-right text-bb-muted">{e.aum}</td>
-                <td className="text-right">{e.expense.toFixed(2)}%</td>
+                <td className="text-right">{round(e.expense, 2)}%</td>
               </tr>
             ))}
           </tbody>

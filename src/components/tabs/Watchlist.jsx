@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import Panel from '../layout/Panel';
 import { stocks, generatePriceHistory } from '../../data/stocks';
-import { formatNumber, formatPercent, formatChange, formatCurrency, formatMcap, colorClass } from '../../utils/format';
+import { formatNumber, formatPercent, formatChange, formatCurrency, formatMcap, colorClass, round } from '../../utils/format';
 
 const tt = { contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' }, labelStyle: { color: '#ffbf00', fontSize: '10px' } };
 const STORAGE_KEY = 'specter_watchlists';
@@ -208,7 +208,7 @@ export default function Watchlist() {
               <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
               <XAxis dataKey="date" tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => v.slice(5)} interval={12} />
               <YAxis domain={['dataMin', 'dataMax']} tick={{ fill: '#6a6a6a', fontSize: 8 }} width={50} />
-              <Tooltip {...tt} formatter={v => '$' + v.toFixed(2)} />
+              <Tooltip {...tt} formatter={v => '$' + round(v, 2)} />
               <Area type="monotone" dataKey="price" stroke={selectedStock.changePct >= 0 ? '#00d26a' : '#ff3b3b'} fill="url(#wlG)" strokeWidth={1.5} dot={false} />
             </AreaChart>
           </ResponsiveContainer>

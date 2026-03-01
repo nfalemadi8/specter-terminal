@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, ScatterChart, Scatter, CartesianGrid } from 'recharts';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
-import { formatCurrency, formatPercent, formatMcap, colorClass } from '../../utils/format';
+import { formatCurrency, formatPercent, formatMcap, colorClass, round } from '../../utils/format';
 
 const STRATEGIES = [
   { id: 'equal', label: 'Equal Weight', desc: 'Distribute equally across all selected securities' },
@@ -110,7 +110,7 @@ function portfolioMetrics(holdings, investmentAmount) {
     sectorMap[h.sector] = (sectorMap[h.sector] || 0) + h.weight;
   });
   const sectors = Object.entries(sectorMap)
-    .map(([name, value]) => ({ name, value: parseFloat(value.toFixed(1)), color: SECTOR_COLORS[name] || '#888' }))
+    .map(([name, value]) => ({ name, value: round(value, 1), color: SECTOR_COLORS[name] || '#888' }))
     .sort((a, b) => b.value - a.value);
 
   return {
@@ -177,7 +177,7 @@ export default function PortfolioGenerator() {
       const ret = selectedStocks.reduce((s, st) => s + st.revGrowth, 0) / selectedStocks.length;
       const simRisk = (risk * 0.3 + risk * t * 1.4) * 10;
       const simRet = ret * 0.2 + ret * t * 0.9 + (Math.random() - 0.5) * 2;
-      points.push({ risk: parseFloat(simRisk.toFixed(1)), return: parseFloat(simRet.toFixed(1)) });
+      points.push({ risk: round(simRisk, 1), return: round(simRet, 1) });
     }
     return points.sort((a, b) => a.risk - b.risk);
   }, [selectedStocks]);
@@ -328,13 +328,13 @@ export default function PortfolioGenerator() {
               <table className="bb-table">
                 <tbody>
                   {[
-                    ['Wtd Beta', metrics.beta.toFixed(2)],
-                    ['Wtd P/E', metrics.pe.toFixed(1)],
-                    ['Wtd Div Yield', metrics.divYield.toFixed(2) + '%'],
+                    ['Wtd Beta', round(metrics.beta, 2)],
+                    ['Wtd P/E', round(metrics.pe, 1)],
+                    ['Wtd Div Yield', round(metrics.divYield, 2) + '%'],
                     ['Wtd Rev Growth', formatPercent(metrics.growth)],
-                    ['Wtd Net Margin', metrics.margin.toFixed(1) + '%'],
-                    ['Wtd ESG Score', metrics.esg.toFixed(0)],
-                    ['Shariah Weight', metrics.shariahPct.toFixed(1) + '%'],
+                    ['Wtd Net Margin', round(metrics.margin, 1) + '%'],
+                    ['Wtd ESG Score', round(metrics.esg, 0)],
+                    ['Shariah Weight', round(metrics.shariahPct, 1) + '%'],
                   ].map(([label, val]) => (
                     <tr key={label}>
                       <td className="text-bb-muted">{label}</td>
@@ -396,7 +396,7 @@ export default function PortfolioGenerator() {
                       <tr key={h.ticker}>
                         <td className="text-bb-amber font-bold">{h.ticker}</td>
                         <td>{h.name}</td>
-                        <td className="text-right font-bold">{h.weight.toFixed(1)}%</td>
+                        <td className="text-right font-bold">{round(h.weight, 1)}%</td>
                         <td className="text-right">{formatCurrency(amount, 0)}</td>
                         <td className="text-right">{shares}</td>
                         <td className="text-right">{formatCurrency(h.price)}</td>
@@ -415,7 +415,7 @@ export default function PortfolioGenerator() {
                 <BarChart data={allocations.sort((a, b) => b.weight - a.weight)} margin={{ top: 5, right: 5, bottom: 0, left: 5 }}>
                   <XAxis dataKey="ticker" tick={{ fill: '#6a6a6a', fontSize: 8 }} />
                   <YAxis tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => v + '%'} />
-                  <Tooltip contentStyle={{ background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' }} formatter={v => v.toFixed(1) + '%'} />
+                  <Tooltip contentStyle={{ background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' }} formatter={v => round(v, 1) + '%'} />
                   <Bar dataKey="weight" radius={[2, 2, 0, 0]}>
                     {allocations.map(h => (
                       <Cell key={h.ticker} fill={SECTOR_COLORS[h.sector] || '#4a9eff'} />

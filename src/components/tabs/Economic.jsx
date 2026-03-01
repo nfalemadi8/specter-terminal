@@ -1,7 +1,7 @@
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import Panel from '../layout/Panel';
 import { economicIndicators, economicCalendar, fedRateHistory } from '../../data/economic';
-import { colorClass } from '../../utils/format';
+import { colorClass, round } from '../../utils/format';
 
 const chartTooltip = {
   contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' },
@@ -52,8 +52,8 @@ export default function Economic() {
               </linearGradient>
             </defs>
             <XAxis dataKey="date" tick={{ fill: '#6a6a6a', fontSize: 9 }} />
-            <YAxis domain={[0, 6]} tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => v.toFixed(1) + '%'} width={40} />
-            <Tooltip {...chartTooltip} formatter={v => v.toFixed(2) + '%'} />
+            <YAxis domain={[0, 6]} tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => round(v, 1) + '%'} width={40} />
+            <Tooltip {...chartTooltip} formatter={v => round(v, 2) + '%'} />
             <Area type="stepAfter" dataKey="rate" stroke="#ff8c00" fill="url(#fedGrad)" strokeWidth={2} />
           </AreaChart>
         </ResponsiveContainer>

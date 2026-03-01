@@ -1,12 +1,12 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import Panel from '../layout/Panel';
 import { sectorPerformance } from '../../data/stocks';
-import { formatPercent, colorClass } from '../../utils/format';
+import { formatPercent, colorClass, round } from '../../utils/format';
 
 const sectorDetail = sectorPerformance.map(s => ({
   ...s,
-  week: parseFloat((s.change * 2.5 + (Math.random() - 0.5) * 2).toFixed(2)),
-  month: parseFloat((s.change * 8 + (Math.random() - 0.5) * 5).toFixed(2)),
+  week: round(s.change * 2.5 + (Math.random() - 0.5) * 2, 2),
+  month: round(s.change * 8 + (Math.random() - 0.5) * 5, 2),
 }));
 
 export default function Sectors() {
@@ -63,7 +63,7 @@ export default function Sectors() {
                 <td className={`text-right ${colorClass(s.week)}`}>{formatPercent(s.week)}</td>
                 <td className={`text-right ${colorClass(s.month)}`}>{formatPercent(s.month)}</td>
                 <td className={`text-right ${colorClass(s.ytd)}`}>{formatPercent(s.ytd)}</td>
-                <td className="text-right">{s.weight.toFixed(1)}%</td>
+                <td className="text-right">{round(s.weight, 1)}%</td>
                 <td>
                   <div className="w-20 h-2 bg-bb-dark rounded overflow-hidden">
                     <div

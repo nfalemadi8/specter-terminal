@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, BarChart, Bar, Cell } from 'recharts';
 import Panel from '../layout/Panel';
 import { treasuries, generateYieldCurve } from '../../data/bonds';
-import { formatNumber, formatChange, colorClass } from '../../utils/format';
+import { formatNumber, formatChange, colorClass, round } from '../../utils/format';
 
 const tt = { contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' }, labelStyle: { color: '#ffbf00', fontSize: '10px' } };
 
@@ -11,7 +11,7 @@ function genHistCurve(label, shift, flatten) {
   const base = generateYieldCurve();
   return base.map(p => ({
     ...p,
-    yield: parseFloat((p.yield + shift + (flatten ? -p.maturity * 0.02 : 0) + (Math.random() - 0.5) * 0.1).toFixed(2)),
+    yield: round(p.yield + shift + (flatten ? -p.maturity * 0.02 : 0) + (Math.random() - 0.5) * 0.1, 2),
   }));
 }
 
@@ -55,7 +55,7 @@ export default function YieldCurve() {
       const noise = (Math.random() - 0.5) * 15;
       return {
         date: d.toISOString().split('T')[0],
-        spread: parseFloat((base2s10s + trend + noise).toFixed(1)),
+        spread: round(base2s10s + trend + noise, 1),
       };
     });
   }, []);
@@ -66,7 +66,7 @@ export default function YieldCurve() {
     const result = [];
     for (let i = 1; i < curve.length; i++) {
       const fwd = forwardRate(curve[i - 1].yield, curve[i - 1].maturity, curve[i].yield, curve[i].maturity);
-      result.push({ label: `${curve[i - 1].label}→${curve[i].label}`, rate: parseFloat(fwd.toFixed(2)) });
+      result.push({ label: `${curve[i - 1].label}→${curve[i].label}`, rate: round(fwd, 2) });
     }
     return result;
   }, []);
@@ -117,8 +117,8 @@ export default function YieldCurve() {
           <LineChart data={mergedData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
             <XAxis dataKey="label" tick={{ fill: '#6a6a6a', fontSize: 9 }} />
-            <YAxis domain={[3, 6.5]} tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => v.toFixed(1) + '%'} width={40} />
-            <Tooltip {...tt} formatter={v => v?.toFixed(2) + '%'} />
+            <YAxis domain={[3, 6.5]} tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => round(v, 1) + '%'} width={40} />
+            <Tooltip {...tt} formatter={v => round(v, 2) + '%'} />
             {CURVES.filter(c => selectedCurves.includes(c.id)).map(c => (
               <Line key={c.id} type="monotone" dataKey={c.id} stroke={c.color} strokeWidth={c.id === 'current' ? 2.5 : 1.5} dot={{ r: c.id === 'current' ? 3 : 2 }} name={c.label} />
             ))}
@@ -132,7 +132,7 @@ export default function YieldCurve() {
           {spreads.map(s => (
             <div key={s.label} className={`border p-1.5 text-center ${s.value < 0 ? 'border-bb-red bg-bb-red/5' : 'border-bb-green bg-bb-green/5'}`}>
               <div className="text-bb-muted text-[9px]">{s.label}</div>
-              <div className={`text-xl font-bold ${colorClass(s.value)}`}>{s.value.toFixed(0)} bp</div>
+              <div className={`text-xl font-bold ${colorClass(s.value)}`}>{round(s.value, 0)} bp</div>
               {s.value < 0 && <div className="text-bb-red text-[8px] font-bold">INVERTED</div>}
             </div>
           ))}
@@ -170,7 +170,7 @@ export default function YieldCurve() {
           <BarChart data={curveChanges} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
             <XAxis dataKey="maturity" tick={{ fill: '#6a6a6a', fontSize: 8 }} />
             <YAxis tick={{ fill: '#6a6a6a', fontSize: 8 }} />
-            <Tooltip {...tt} formatter={v => v.toFixed(1) + ' bp'} />
+            <Tooltip {...tt} formatter={v => round(v, 1) + ' bp'} />
             <Bar dataKey="change" radius={[2, 2, 0, 0]}>
               {curveChanges.map(c => <Cell key={c.maturity} fill={c.change >= 0 ? '#00d26a' : '#ff3b3b'} />)}
             </Bar>

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
 import Panel from '../layout/Panel';
-import { formatLargeNumber, colorClass } from '../../utils/format';
+import { formatLargeNumber, colorClass, round } from '../../utils/format';
 
 const tt = { contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' }, labelStyle: { color: '#ffbf00', fontSize: '10px' } };
 
@@ -67,14 +67,14 @@ export default function Billionaires() {
   const bySector = useMemo(() => {
     const map = {};
     filtered.forEach(b => { map[b.sector] = (map[b.sector] || 0) + b.netWorth; });
-    return Object.entries(map).map(([name, value]) => ({ name, value: parseFloat(value.toFixed(1)) })).sort((a, b) => b.value - a.value);
+    return Object.entries(map).map(([name, value]) => ({ name, value: round(value, 1) })).sort((a, b) => b.value - a.value);
   }, [filtered]);
 
   // By country chart
   const byCountry = useMemo(() => {
     const map = {};
     filtered.forEach(b => { map[b.country] = (map[b.country] || 0) + b.netWorth; });
-    return Object.entries(map).map(([name, value]) => ({ name, value: parseFloat(value.toFixed(1)) })).sort((a, b) => b.value - a.value);
+    return Object.entries(map).map(([name, value]) => ({ name, value: round(value, 1) })).sort((a, b) => b.value - a.value);
   }, [filtered]);
 
   // Top 10 wealth chart
@@ -132,8 +132,8 @@ export default function Billionaires() {
               <tr key={b.rank} onClick={() => setSelected(b)} className={`cursor-pointer ${selected.rank === b.rank ? 'bg-bb-amber/10' : ''}`}>
                 <td className="text-bb-muted">{b.rank}</td>
                 <td className="text-bb-amber font-bold">{b.name}</td>
-                <td className="text-right font-bold">${b.netWorth.toFixed(1)}B</td>
-                <td className={`text-right ${colorClass(b.changePct)}`}>{b.changePct > 0 ? '+' : ''}{b.changePct.toFixed(1)}%</td>
+                <td className="text-right font-bold">${round(b.netWorth, 1)}B</td>
+                <td className={`text-right ${colorClass(b.changePct)}`}>{b.changePct > 0 ? '+' : ''}{round(b.changePct, 1)}%</td>
                 <td className="text-bb-muted text-[9px] truncate max-w-[100px]">{b.source}</td>
                 <td className="text-[9px]">{b.country}</td>
                 <td className="text-bb-muted">{b.age}</td>
@@ -149,7 +149,7 @@ export default function Billionaires() {
         <div className="space-y-2 text-[10px] p-0.5">
           <div className="grid grid-cols-2 gap-1.5">
             <div className="border border-bb-border p-2 text-center">
-              <div className="text-lg font-bold text-bb-amber">${totalWealth.toFixed(0)}B</div>
+              <div className="text-lg font-bold text-bb-amber">${round(totalWealth, 0)}B</div>
               <div className="text-[8px] text-bb-muted">TOTAL WEALTH</div>
             </div>
             <div className="border border-bb-border p-2 text-center">
@@ -160,8 +160,8 @@ export default function Billionaires() {
           <table className="bb-table"><tbody>
             {[
               ['Self-Made', `${selfMadeCount}/${filtered.length}`],
-              ['Biggest Gainer', biggestGainer ? `${biggestGainer.name.split(' ').pop()} +${biggestGainer.changePct.toFixed(1)}%` : '—'],
-              ['Biggest Loser', biggestLoser ? `${biggestLoser.name.split(' ').pop()} ${biggestLoser.changePct.toFixed(1)}%` : '—'],
+              ['Biggest Gainer', biggestGainer ? `${biggestGainer.name.split(' ').pop()} +${round(biggestGainer.changePct, 1)}%` : '—'],
+              ['Biggest Loser', biggestLoser ? `${biggestLoser.name.split(' ').pop()} ${round(biggestLoser.changePct, 1)}%` : '—'],
             ].map(([l, v]) => (
               <tr key={l}><td className="text-bb-muted">{l}</td><td className="text-right font-bold">{v}</td></tr>
             ))}
@@ -171,11 +171,11 @@ export default function Billionaires() {
             <div className="text-[9px] text-bb-muted mb-1">SELECTED: {selected.name}</div>
             <table className="bb-table"><tbody>
               {[
-                ['Net Worth', `$${selected.netWorth.toFixed(1)}B`],
+                ['Net Worth', `$${round(selected.netWorth, 1)}B`],
                 ['Source', selected.source],
                 ['Country', selected.country],
                 ['Sector', selected.sector],
-                ['Daily Chg', `$${selected.change.toFixed(1)}B (${selected.changePct > 0 ? '+' : ''}${selected.changePct.toFixed(1)}%)`],
+                ['Daily Chg', `$${round(selected.change, 1)}B (${selected.changePct > 0 ? '+' : ''}${round(selected.changePct, 1)}%)`],
                 ['Self-Made', selected.selfMade ? 'Yes' : 'No'],
               ].map(([l, v]) => (
                 <tr key={l}><td className="text-bb-muted">{l}</td><td className="text-right font-bold">{v}</td></tr>
@@ -191,7 +191,7 @@ export default function Billionaires() {
           <BarChart data={topChart} layout="vertical" margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
             <XAxis type="number" tick={{ fill: '#6a6a6a', fontSize: 8 }} />
             <YAxis type="category" dataKey="name" tick={{ fill: '#6a6a6a', fontSize: 8 }} width={60} />
-            <Tooltip {...tt} formatter={v => `$${v.toFixed(1)}B`} />
+            <Tooltip {...tt} formatter={v => `$${round(v, 1)}B`} />
             <Bar dataKey="worth" radius={[0, 2, 2, 0]}>
               {topChart.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
             </Bar>
@@ -206,7 +206,7 @@ export default function Billionaires() {
             <Pie data={bySector} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius="80%" innerRadius="40%" paddingAngle={2} label={({ name, value }) => `${name}: $${value}B`} labelLine={false}>
               {bySector.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
             </Pie>
-            <Tooltip {...tt} formatter={v => `$${v.toFixed(1)}B`} />
+            <Tooltip {...tt} formatter={v => `$${round(v, 1)}B`} />
           </PieChart>
         </ResponsiveContainer>
       </Panel>
@@ -217,7 +217,7 @@ export default function Billionaires() {
           <BarChart data={byCountry} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
             <XAxis dataKey="name" tick={{ fill: '#6a6a6a', fontSize: 8 }} />
             <YAxis tick={{ fill: '#6a6a6a', fontSize: 8 }} width={40} />
-            <Tooltip {...tt} formatter={v => `$${v.toFixed(1)}B`} />
+            <Tooltip {...tt} formatter={v => `$${round(v, 1)}B`} />
             <Bar dataKey="value" radius={[2, 2, 0, 0]}>
               {byCountry.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
             </Bar>

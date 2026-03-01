@@ -3,7 +3,7 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'rec
 import Panel from '../layout/Panel';
 import { portfolioHoldings, calculatePortfolioMetrics, portfolioHistory, sectorAllocation } from '../../data/portfolio';
 import { stocks } from '../../data/stocks';
-import { formatNumber, formatCurrency, formatPercent, colorClass } from '../../utils/format';
+import { formatNumber, formatCurrency, formatPercent, colorClass, round } from '../../utils/format';
 import { loadData, saveData } from '../../utils/storage';
 import { convertCurrency, exportToCSV, currencyRates } from '../../utils/calculations';
 
@@ -105,7 +105,7 @@ export default function Portfolio() {
       updated[existingIdx] = {
         ...existing,
         shares: totalShares,
-        avgCost: parseFloat(newAvgCost.toFixed(2)),
+        avgCost: round(newAvgCost, 2),
       };
       setHoldings(updated);
     } else {
@@ -139,8 +139,8 @@ export default function Portfolio() {
       'Market Value': h.marketValue,
       'Cost Basis': h.costBasis,
       'P&L': h.gainLoss,
-      'P&L %': h.gainLossPct.toFixed(2) + '%',
-      'Weight %': h.weight.toFixed(1) + '%',
+      'P&L %': round(h.gainLossPct, 2) + '%',
+      'Weight %': round(h.weight, 1) + '%',
       Sector: h.sector,
     }));
     exportToCSV(rows, 'specter-portfolio-export');
@@ -161,7 +161,7 @@ export default function Portfolio() {
               </linearGradient>
             </defs>
             <XAxis dataKey="date" tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => v.slice(5)} interval={15} />
-            <YAxis domain={['dataMin', 'dataMax']} tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => '$' + (v / 1000).toFixed(0) + 'K'} width={50} />
+            <YAxis domain={['dataMin', 'dataMax']} tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => '$' + round(v / 1000, 0) + 'K'} width={50} />
             <Tooltip {...chartTooltip} formatter={v => formatCurrency(v)} />
             <Area type="monotone" dataKey="value" stroke="#00d26a" fill="url(#pfGrad)" strokeWidth={1.5} dot={false} />
           </AreaChart>
@@ -221,7 +221,7 @@ export default function Portfolio() {
           {/* Goal Progress */}
           <div>
             <div className="text-bb-muted text-[10px] mb-1">
-              GOAL: QR {formatNumber(GOAL_QAR, 0)} ({goalProgress.toFixed(1)}%)
+              GOAL: QR {formatNumber(GOAL_QAR, 0)} ({round(goalProgress, 1)}%)
             </div>
             <div className="w-full h-2 bg-bb-dark border border-bb-border rounded-sm overflow-hidden">
               <div
@@ -241,7 +241,7 @@ export default function Portfolio() {
               {computedSectors.map(s => (
                 <div key={s.name} className="flex items-center gap-1 text-[9px]">
                   <div className="w-2 h-2 rounded-full" style={{ background: s.color }} />
-                  <span className="text-bb-muted">{s.name} {s.value.toFixed(1)}%</span>
+                  <span className="text-bb-muted">{s.name} {round(s.value, 1)}%</span>
                 </div>
               ))}
             </div>
@@ -281,7 +281,7 @@ export default function Portfolio() {
                 <td className={`text-right ${colorClass(h.gainLossPct)}`}>
                   {formatPercent(h.gainLossPct)}
                 </td>
-                <td className="text-right">{h.weight.toFixed(1)}%</td>
+                <td className="text-right">{round(h.weight, 1)}%</td>
                 <td className="text-center">
                   <button
                     onClick={() => handleRemove(h.symbol)}

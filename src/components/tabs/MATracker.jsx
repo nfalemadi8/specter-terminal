@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
 import Panel from '../layout/Panel';
-import { formatNumber, formatMcap, colorClass } from '../../utils/format';
+import { formatNumber, formatMcap, colorClass, round } from '../../utils/format';
 
 const tt = { contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' }, labelStyle: { color: '#ffbf00', fontSize: '10px' } };
 
@@ -44,7 +44,7 @@ export default function MATracker() {
     deals.forEach(d => { map[d.sector] = (map[d.sector] || 0) + d.value; });
     const colors = { Technology: '#4a9eff', Energy: '#ff3b3b', Healthcare: '#00d26a', Financials: '#ffd700', Materials: '#ff8c00' };
     return Object.entries(map).map(([name, value]) => ({
-      name, value: parseFloat((value / 1e9).toFixed(1)), color: colors[name] || '#6a6a6a',
+      name, value: round(value / 1e9, 1), color: colors[name] || '#6a6a6a',
     })).sort((a, b) => b.value - a.value);
   }, []);
 
@@ -78,7 +78,7 @@ export default function MATracker() {
           <div className="border-t border-bb-border pt-1.5">
             <div className="text-[9px] text-bb-muted mb-1">SUMMARY</div>
             <table className="bb-table"><tbody>
-              {[['Total Deals', deals.length], ['Total Value', formatMcap(totalValue)], ['Avg Premium', avgPremium.toFixed(1) + '%'], ['Pending', pendingCount]].map(([l, v]) => (
+              {[['Total Deals', deals.length], ['Total Value', formatMcap(totalValue)], ['Avg Premium', round(avgPremium, 1) + '%'], ['Pending', pendingCount]].map(([l, v]) => (
                 <tr key={l}><td className="text-bb-muted">{l}</td><td className="text-right font-bold">{v}</td></tr>
               ))}
             </tbody></table>

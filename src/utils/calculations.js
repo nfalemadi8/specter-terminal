@@ -1,3 +1,5 @@
+import { round } from './format';
+
 // DCF Valuation
 export function calculateDCF(eps, growthRate, discountRate, terminalGrowth, years = 10) {
   let totalPV = 0;
@@ -8,12 +10,11 @@ export function calculateDCF(eps, growthRate, discountRate, terminalGrowth, year
   }
   const terminalValue = (currentEPS * (1 + terminalGrowth / 100)) / (discountRate / 100 - terminalGrowth / 100);
   const pvTerminal = terminalValue / Math.pow(1 + discountRate / 100, years);
-  return parseFloat((totalPV + pvTerminal).toFixed(2));
+  return round(totalPV + pvTerminal, 2);
 }
 
 // Black-Scholes for options
 export function blackScholes(S, K, T, r, sigma, type = 'call') {
-  // S = spot price, K = strike, T = time to expiry (years), r = risk-free rate, sigma = volatility
   const d1 = (Math.log(S / K) + (r + sigma * sigma / 2) * T) / (sigma * Math.sqrt(T));
   const d2 = d1 - sigma * Math.sqrt(T);
   const Nd1 = normalCDF(d1);
@@ -40,10 +41,10 @@ export function calculateGreeks(S, K, T, r, sigma) {
   const d2 = d1 - sigma * Math.sqrt(T);
   const nd1 = Math.exp(-d1 * d1 / 2) / Math.sqrt(2 * Math.PI);
   return {
-    delta: parseFloat(normalCDF(d1).toFixed(4)),
-    gamma: parseFloat((nd1 / (S * sigma * Math.sqrt(T))).toFixed(6)),
-    theta: parseFloat((-(S * nd1 * sigma) / (2 * Math.sqrt(T)) - r * K * Math.exp(-r * T) * normalCDF(d2)).toFixed(4)),
-    vega: parseFloat((S * nd1 * Math.sqrt(T) / 100).toFixed(4)),
+    delta: round(normalCDF(d1), 4),
+    gamma: round(nd1 / (S * sigma * Math.sqrt(T)), 6),
+    theta: round(-(S * nd1 * sigma) / (2 * Math.sqrt(T)) - r * K * Math.exp(-r * T) * normalCDF(d2), 4),
+    vega: round(S * nd1 * Math.sqrt(T) / 100, 4),
   };
 }
 

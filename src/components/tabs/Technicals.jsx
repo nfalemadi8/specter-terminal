@@ -1,7 +1,7 @@
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import Panel from '../layout/Panel';
 import { generatePriceHistory } from '../../data/stocks';
-import { formatNumber } from '../../utils/format';
+import { formatNumber, round } from '../../utils/format';
 
 const priceData = generatePriceHistory(189.84, 120);
 
@@ -21,11 +21,11 @@ const rsiData = priceData.map((d, i) => {
     if (diff > 0) gains += diff; else losses -= diff;
   }
   const rs = losses === 0 ? 100 : gains / losses;
-  return { date: d.date, rsi: parseFloat((100 - 100 / (1 + rs)).toFixed(1)) };
+  return { date: d.date, rsi: round(100 - 100 / (1 + rs), 1) };
 });
 
 const technicalSignals = [
-  { indicator: 'RSI (14)', value: rsiData[rsiData.length - 1].rsi.toFixed(1), signal: rsiData[rsiData.length - 1].rsi > 70 ? 'OVERBOUGHT' : rsiData[rsiData.length - 1].rsi < 30 ? 'OVERSOLD' : 'NEUTRAL' },
+  { indicator: 'RSI (14)', value: round(rsiData[rsiData.length - 1].rsi, 1), signal: rsiData[rsiData.length - 1].rsi > 70 ? 'OVERBOUGHT' : rsiData[rsiData.length - 1].rsi < 30 ? 'OVERSOLD' : 'NEUTRAL' },
   { indicator: 'MACD', value: '2.45', signal: 'BUY' },
   { indicator: 'SMA 20', value: formatNumber(withIndicators[withIndicators.length - 1].sma20), signal: withIndicators[withIndicators.length - 1].price > withIndicators[withIndicators.length - 1].sma20 ? 'BUY' : 'SELL' },
   { indicator: 'SMA 50', value: formatNumber(withIndicators[withIndicators.length - 1].sma50), signal: withIndicators[withIndicators.length - 1].price > withIndicators[withIndicators.length - 1].sma50 ? 'BUY' : 'SELL' },
@@ -99,7 +99,7 @@ export default function Technicals() {
         <ResponsiveContainer width="100%" height={80}>
           <BarChart data={priceData.slice(-30)}>
             <XAxis dataKey="date" tick={false} />
-            <YAxis tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => (v / 1e6).toFixed(0) + 'M'} width={35} />
+            <YAxis tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => round(v / 1e6, 0) + 'M'} width={35} />
             <Bar dataKey="volume" fill="#4a9eff" opacity={0.5} />
           </BarChart>
         </ResponsiveContainer>

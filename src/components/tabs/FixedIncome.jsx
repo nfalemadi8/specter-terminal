@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import Panel from '../layout/Panel';
 import { treasuries, corporateBonds, generateYieldCurve } from '../../data/bonds';
-import { formatNumber, formatChange, colorClass } from '../../utils/format';
+import { formatNumber, formatChange, colorClass, round } from '../../utils/format';
 
 const chartTooltip = {
   contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' },
@@ -59,8 +59,8 @@ export default function FixedIncome() {
             <defs><linearGradient id="ycG2" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#ffd700" stopOpacity={0.3} /><stop offset="95%" stopColor="#ffd700" stopOpacity={0} /></linearGradient></defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
             <XAxis dataKey="label" tick={{ fill: '#6a6a6a', fontSize: 9 }} />
-            <YAxis domain={[3.5, 6]} tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => v.toFixed(1) + '%'} width={40} />
-            <Tooltip {...chartTooltip} formatter={v => v.toFixed(2) + '%'} />
+            <YAxis domain={[3.5, 6]} tick={{ fill: '#6a6a6a', fontSize: 9 }} tickFormatter={v => round(v, 1) + '%'} width={40} />
+            <Tooltip {...chartTooltip} formatter={v => round(v, 2) + '%'} />
             <Area type="monotone" dataKey="yield" stroke="#ffd700" fill="url(#ycG2)" strokeWidth={2} dot={{ fill: '#ffd700', r: 3 }} />
           </AreaChart>
         </ResponsiveContainer>
@@ -73,10 +73,10 @@ export default function FixedIncome() {
             {treasuries.map(t => (
               <tr key={t.maturity}>
                 <td className="text-bb-amber">{t.maturity}</td>
-                <td className="text-right font-bold">{t.yield.toFixed(2)}%</td>
+                <td className="text-right font-bold">{round(t.yield, 2)}%</td>
                 <td className={`text-right ${colorClass(t.change)}`}>{formatChange(t.change, 2)}</td>
-                <td className="text-right text-bb-muted">{t.prev.toFixed(2)}%</td>
-                <td className="text-right text-bb-muted">{t.duration.toFixed(2)}</td>
+                <td className="text-right text-bb-muted">{round(t.prev, 2)}%</td>
+                <td className="text-right text-bb-muted">{round(t.duration, 2)}</td>
               </tr>
             ))}
           </tbody>
@@ -88,7 +88,7 @@ export default function FixedIncome() {
           {[{ label: '2s10s Spread', value: s2s10, desc: '10Y − 2Y' }, { label: '3m10Y Spread', value: s3m10, desc: '10Y − 3M' }].map(s => (
             <div key={s.label} className={`text-center py-2 border ${s.value < 0 ? 'border-bb-red bg-bb-red/5' : 'border-bb-green bg-bb-green/5'}`}>
               <div className="text-bb-muted text-[9px]">{s.label}</div>
-              <div className={`text-xl font-bold ${colorClass(s.value)}`}>{s.value.toFixed(0)} bp</div>
+              <div className={`text-xl font-bold ${colorClass(s.value)}`}>{round(s.value, 0)} bp</div>
               <div className="text-bb-muted text-[8px]">{s.desc}</div>
               {s.value < 0 && <div className="text-bb-red text-[8px] font-bold">INVERTED</div>}
             </div>
@@ -110,7 +110,7 @@ export default function FixedIncome() {
           <CInput label="Years" value={calcYears} set={setCalcYears} step={1} />
           <div className="border-t border-bb-border pt-1.5">
             <table className="bb-table"><tbody>
-              {[['Price', '$' + formatNumber(cp)], ['Price %', (cp / calcFace * 100).toFixed(2) + '%'], ['Mod Duration', cd.toFixed(3)], ['DV01', '$' + formatNumber(cdv, 4)], ['Curr Yield', (calcFace * calcCoupon / 100 / cp * 100).toFixed(2) + '%']].map(([l, v]) => (
+              {[['Price', '$' + formatNumber(cp)], ['Price %', round(cp / calcFace * 100, 2) + '%'], ['Mod Duration', round(cd, 3)], ['DV01', '$' + formatNumber(cdv, 4)], ['Curr Yield', round(calcFace * calcCoupon / 100 / cp * 100, 2) + '%']].map(([l, v]) => (
                 <tr key={l}><td className="text-bb-muted">{l}</td><td className="text-right font-bold">{v}</td></tr>
               ))}
             </tbody></table>
@@ -126,7 +126,7 @@ export default function FixedIncome() {
               <tr key={s.shift} className={s.shift === 0 ? 'bg-bb-amber/10' : ''}>
                 <td className={`text-right ${s.shift === 0 ? 'text-bb-amber font-bold' : 'text-bb-muted'}`}>{s.shift > 0 ? '+' : ''}{s.shift}</td>
                 <td className="text-right font-bold">${formatNumber(s.price)}</td>
-                <td className={`text-right ${colorClass(s.change)}`}>{s.change > 0 ? '+' : ''}{s.change.toFixed(2)}%</td>
+                <td className={`text-right ${colorClass(s.change)}`}>{s.change > 0 ? '+' : ''}{round(s.change, 2)}%</td>
               </tr>
             ))}
           </tbody>
@@ -145,13 +145,13 @@ export default function FixedIncome() {
             {filteredBonds.map(b => (
               <tr key={b.issuer}>
                 <td className="text-bb-amber">{b.issuer}</td>
-                <td className="text-right">{b.coupon.toFixed(2)}%</td>
+                <td className="text-right">{round(b.coupon, 2)}%</td>
                 <td>{b.maturity}</td>
                 <td><span className={b.rating.startsWith('AA') ? 'text-bb-green' : b.rating.startsWith('A') ? 'text-bb-blue' : b.rating.startsWith('BBB') ? 'text-bb-yellow' : 'text-bb-orange'}>{b.rating}</span></td>
-                <td className="text-right font-bold">{b.yield.toFixed(2)}%</td>
+                <td className="text-right font-bold">{round(b.yield, 2)}%</td>
                 <td className="text-right">{b.spread}</td>
                 <td className="text-right">{formatNumber(b.price)}</td>
-                <td className="text-right text-bb-muted">{b.duration.toFixed(1)}</td>
+                <td className="text-right text-bb-muted">{round(b.duration, 1)}</td>
                 <td className={b.type === 'Sukuk' ? 'text-bb-green font-bold' : 'text-bb-muted'}>{b.type}</td>
               </tr>
             ))}

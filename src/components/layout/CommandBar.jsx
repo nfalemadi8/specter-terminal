@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { tabs } from '../../data/tabs';
 import { stocks } from '../../data/stocks';
+import { round } from '../../utils/format';
 
 // Fuzzy match scoring
 function fuzzyMatch(query, target) {
@@ -159,8 +160,8 @@ export default function CommandBar({ onTabChange }) {
                   {r.shortcut && <span className="text-[8px] text-bb-muted border border-bb-border px-1 py-[1px]">{r.shortcut}</span>}
                   {r.price && (
                     <span className="text-[10px] ml-2">
-                      <span className="text-bb-white">${r.price.toFixed(2)}</span>
-                      <span className={`ml-1 ${r.changePct >= 0 ? 'positive' : 'negative'}`}>{r.changePct >= 0 ? '+' : ''}{r.changePct.toFixed(2)}%</span>
+                      <span className="text-bb-white">${round(r.price, 2)}</span>
+                      <span className={`ml-1 ${r.changePct >= 0 ? 'positive' : 'negative'}`}>{r.changePct >= 0 ? '+' : ''}{round(r.changePct, 2)}%</span>
                     </span>
                   )}
                 </div>

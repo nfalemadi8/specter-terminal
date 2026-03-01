@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
-import { formatNumber, formatPercent, formatCurrency, colorClass, currentTime } from '../../utils/format';
+import { formatNumber, formatPercent, formatCurrency, colorClass, currentTime, round } from '../../utils/format';
 
 const ALERT_TYPES = ['Price Above', 'Price Below', 'Pct Change Above', 'Pct Change Below', 'Volume Above'];
 const STORAGE_KEY = 'specter_alerts';
@@ -201,11 +201,11 @@ export default function Alerts() {
             <div className="text-[9px] text-bb-muted mb-1">QUICK ALERTS</div>
             {stocks.slice(0, 3).map(s => (
               <div key={s.ticker} className="flex gap-1 mb-0.5">
-                <button onClick={() => { setNewTicker(s.ticker); setNewType('Price Above'); setNewTarget(String((s.price * 1.05).toFixed(2))); }}
+                <button onClick={() => { setNewTicker(s.ticker); setNewType('Price Above'); setNewTarget(String(round(s.price * 1.05, 2))); }}
                   className="flex-1 text-[8px] py-0.5 border border-bb-border text-bb-muted hover:text-bb-green hover:border-bb-green">
                   {s.ticker} &gt; {formatCurrency(s.price * 1.05)}
                 </button>
-                <button onClick={() => { setNewTicker(s.ticker); setNewType('Price Below'); setNewTarget(String((s.price * 0.95).toFixed(2))); }}
+                <button onClick={() => { setNewTicker(s.ticker); setNewType('Price Below'); setNewTarget(String(round(s.price * 0.95, 2))); }}
                   className="flex-1 text-[8px] py-0.5 border border-bb-border text-bb-muted hover:text-bb-red hover:border-bb-red">
                   {s.ticker} &lt; {formatCurrency(s.price * 0.95)}
                 </button>

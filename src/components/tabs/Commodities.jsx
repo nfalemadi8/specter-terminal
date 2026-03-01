@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import Panel from '../layout/Panel';
 import { commodities, generateCommodityHistory } from '../../data/commodities';
-import { formatNumber, formatPercent, formatChange, colorClass } from '../../utils/format';
+import { formatNumber, formatPercent, formatChange, colorClass, round } from '../../utils/format';
 
 const chartTooltip = {
   contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' },
@@ -191,7 +191,7 @@ export default function Commodities() {
           <BarChart data={ytdData} margin={{ top: 5, right: 5, bottom: 5, left: 5 }} layout="vertical">
             <XAxis type="number" tick={{ fill: '#6a6a6a', fontSize: 8 }} tickFormatter={v => v + '%'} />
             <YAxis type="category" dataKey="symbol" tick={{ fill: '#6a6a6a', fontSize: 8 }} width={30} />
-            <Tooltip {...chartTooltip} formatter={v => v.toFixed(1) + '%'} />
+            <Tooltip {...chartTooltip} formatter={v => round(v, 1) + '%'} />
             <Bar dataKey="ytd" radius={[0, 2, 2, 0]}>
               {ytdData.map(d => (
                 <Cell key={d.symbol} fill={d.ytd >= 0 ? '#00d26a' : '#ff3b3b'} />

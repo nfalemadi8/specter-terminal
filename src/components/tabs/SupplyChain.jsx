@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import Panel from '../layout/Panel';
 import { stocks } from '../../data/stocks';
-import { formatCurrency, formatPercent, formatMcap, colorClass } from '../../utils/format';
+import { formatCurrency, formatPercent, formatMcap, colorClass, round } from '../../utils/format';
 
 const tt = { contentStyle: { background: '#1a1a1a', border: '1px solid #2a2a2a', fontSize: '10px', fontFamily: 'monospace' }, labelStyle: { color: '#ffbf00', fontSize: '10px' } };
 
@@ -95,7 +95,7 @@ export default function SupplyChain() {
         <div className="flex items-center justify-between text-[10px] p-0.5">
           <span className="text-bb-muted">Risk Score</span>
           <span className={`font-bold text-lg ${network.riskScore > 60 ? 'text-bb-red' : network.riskScore > 40 ? 'text-bb-yellow' : 'text-bb-green'}`}>
-            {network.riskScore.toFixed(0)}/100
+            {round(network.riskScore, 0)}/100
           </span>
         </div>
       </Panel>
@@ -151,8 +151,8 @@ export default function SupplyChain() {
             {[
               ['Suppliers', network.suppliers.length],
               ['Customers', network.customers.length],
-              ['Supplier Conc.', network.supplierConcentration.toFixed(0) + '%'],
-              ['Customer Conc.', network.customerConcentration.toFixed(0) + '%'],
+              ['Supplier Conc.', round(network.supplierConcentration, 0) + '%'],
+              ['Customer Conc.', round(network.customerConcentration, 0) + '%'],
               ['Supplies To (rev)', suppliesTo.length + ' companies'],
               ['Buys From (rev)', buyersFrom.length + ' companies'],
             ].map(([l, v]) => (

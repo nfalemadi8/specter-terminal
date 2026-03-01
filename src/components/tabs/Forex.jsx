@@ -1,6 +1,6 @@
 import Panel from '../layout/Panel';
 import { forexPairs } from '../../data/forex';
-import { formatNumber, formatPercent, colorClass } from '../../utils/format';
+import { formatNumber, formatPercent, colorClass, round } from '../../utils/format';
 
 export default function Forex() {
   return (
@@ -21,7 +21,7 @@ export default function Forex() {
           </thead>
           <tbody>
             {forexPairs.map(f => {
-              const spread = ((f.ask - f.bid) * (f.bid > 100 ? 100 : 10000)).toFixed(1);
+              const spread = round((f.ask - f.bid) * (f.bid > 100 ? 100 : 10000), 1);
               return (
                 <tr key={f.pair}>
                   <td className="text-bb-amber font-semibold">{f.pair}</td>

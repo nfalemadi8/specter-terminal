@@ -1,0 +1,1 @@
+import{j as e}from"./index-CkYMob1w.js";function n({title:s,children:a,className:l=""}){return e.jsxs("div",{className:`bb-panel flex flex-col ${l}`,children:[s&&e.jsx("div",{className:"bb-panel-header",children:s}),e.jsx("div",{className:"flex-1 overflow-auto p-2",children:a})]})}export{n as P};

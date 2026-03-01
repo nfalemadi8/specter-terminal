@@ -1,3 +1,5 @@
+import { round } from '../utils/format';
+
 export const commodities = [
   { symbol: 'GC', name: 'Gold', price: 2024.50, change: 12.30, changePct: 0.61, unit: '$/oz', category: 'Precious Metals', ytd: 8.4 },
   { symbol: 'SI', name: 'Silver', price: 24.18, change: 0.42, changePct: 1.77, unit: '$/oz', category: 'Precious Metals', ytd: -1.2 },
@@ -30,7 +32,7 @@ export function generateCommodityHistory(basePrice, days = 60) {
     price = Math.max(price + volatility, basePrice * 0.8);
     data.push({
       date: date.toISOString().split('T')[0],
-      price: parseFloat(price.toFixed(2)),
+      price: round(price, 2),
     });
   }
   return data;

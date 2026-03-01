@@ -693,11 +693,11 @@ export function generatePriceHistory(basePrice, days = 90) {
     price = Math.max(price + volatility, basePrice * 0.7);
     data.push({
       date: date.toISOString().split('T')[0],
-      price: parseFloat(price.toFixed(2)),
+      price: Math.round(price * 100) / 100,
       volume: Math.floor(Math.random() * 50000000) + 10000000,
-      open: parseFloat((price + (Math.random() - 0.5) * 2).toFixed(2)),
-      high: parseFloat((price + Math.random() * 3).toFixed(2)),
-      low: parseFloat((price - Math.random() * 3).toFixed(2)),
+      open: Math.round((price + (Math.random() - 0.5) * 2) * 100) / 100,
+      high: Math.round((price + Math.random() * 3) * 100) / 100,
+      low: Math.round((price - Math.random() * 3) * 100) / 100,
     });
   }
   return data;
