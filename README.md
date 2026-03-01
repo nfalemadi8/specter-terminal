@@ -1,16 +1,26 @@
-# React + Vite
+# SPECTER Terminal — Bloomberg-Style Financial Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A personal Bloomberg Terminal-style financial dashboard with 39 interactive modules covering equities, fixed income, commodities, forex, crypto, options, futures, ETFs, economic data, portfolio management, and Islamic finance — all rendered in a dark terminal theme with monospace fonts and amber/green coloring. All market data is simulated for demonstration purposes.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Framework**: React 19 (Vite 7)
+- **Styling**: Tailwind CSS v4
+- **Charts**: Recharts
+- **Persistence**: localStorage
+- **Utilities**: Lodash
 
-## React Compiler
+## Setup
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install       # Install dependencies
+npm run dev       # Start dev server (http://localhost:5173)
+npm run build     # Production build
+npm run preview   # Preview production build
+```
 
-## Expanding the ESLint configuration
+All market data is simulated — no external API calls or keys required.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Live Site
+
+[nfalemadi8.github.io/specter-terminal](https://nfalemadi8.github.io/specter-terminal)
