@@ -10,6 +10,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           'recharts': ['recharts'],
+          'market-data': ['./src/data/globalMarkets.js'],
         },
       },
     },
