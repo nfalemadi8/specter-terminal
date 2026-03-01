@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { tabs } from '../../data/tabs';
-import { stocks } from '../../data/stocks';
+import { universalSearch } from '../../services/dataProvider';
 import { round } from '../../utils/format';
 
 // Fuzzy match scoring
@@ -17,15 +17,52 @@ function fuzzyMatch(query, target) {
   return qi === q.length ? 50 : 0;
 }
 
+const TYPE_BADGE = {
+  tab:       'bg-bb-amber/20 text-bb-amber',
+  stock:     'bg-bb-blue/20 text-bb-blue',
+  bond:      'bg-bb-green/20 text-bb-green',
+  etf:       'bg-bb-cyan/20 text-bb-cyan',
+  crypto:    'bg-bb-orange/20 text-bb-orange',
+  index:     'bg-bb-yellow/20 text-bb-yellow',
+  currency:  'bg-bb-blue/20 text-bb-blue',
+  commodity: 'bg-bb-red/20 text-bb-red',
+  command:   'bg-bb-cyan/20 text-bb-cyan',
+};
+
+const TYPE_TAB_MAP = {
+  stock:     'equities',
+  bond:      'fixedIncome',
+  etf:       'etfs',
+  crypto:    'crypto',
+  index:     'indices',
+  currency:  'forex',
+  commodity: 'commodities',
+};
+
 export default function CommandBar({ onTabChange }) {
   const [input, setInput] = useState('');
   const [spotlight, setSpotlight] = useState(false);
   const [spotlightQuery, setSpotlightQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [assetResults, setAssetResults] = useState([]);
   const inputRef = useRef(null);
   const spotlightRef = useRef(null);
+  const searchTimer = useRef(null);
 
-  // Build search results
+  // Debounced async search for assets
+  useEffect(() => {
+    if (!spotlight || !spotlightQuery.trim()) {
+      setAssetResults([]);
+      return;
+    }
+    clearTimeout(searchTimer.current);
+    searchTimer.current = setTimeout(() => {
+      universalSearch(spotlightQuery.trim()).then(setAssetResults);
+    }, 150);
+    return () => clearTimeout(searchTimer.current);
+  }, [spotlight, spotlightQuery]);
+
+  // Build search results — merge tabs, commands, and async asset results
   const results = spotlight && spotlightQuery.trim() ? (() => {
     const q = spotlightQuery.trim();
     const items = [];
@@ -34,12 +71,6 @@ export default function CommandBar({ onTabChange }) {
     tabs.forEach(t => {
       const score = Math.max(fuzzyMatch(q, t.label), fuzzyMatch(q, t.id));
       if (score > 0) items.push({ type: 'tab', id: t.id, label: t.label, shortcut: t.shortcut, score, action: () => { onTabChange(t.id); setSpotlight(false); } });
-    });
-
-    // Stocks
-    stocks.forEach(s => {
-      const score = Math.max(fuzzyMatch(q, s.ticker), fuzzyMatch(q, s.name));
-      if (score > 0) items.push({ type: 'stock', id: s.ticker, label: s.ticker, sublabel: s.name, price: s.price, changePct: s.changePct, score, action: () => { onTabChange('equities'); setSpotlight(false); } });
     });
 
     // Commands
@@ -57,7 +88,28 @@ export default function CommandBar({ onTabChange }) {
       if (score > 0) items.push({ type: 'command', ...c, score });
     });
 
-    return items.sort((a, b) => b.score - a.score).slice(0, 15);
+    // Asset results from universalSearch (bonds, ETFs, crypto, indices, currencies, commodities, stocks)
+    assetResults.forEach(r => {
+      const targetTab = TYPE_TAB_MAP[r.type] || 'equities';
+      items.push({
+        type: r.type,
+        id: `${r.type}:${r.id}`,
+        label: r.id,
+        sublabel: r.name,
+        detail: r.detail,
+        score: 60, // ranked below exact tab/command matches
+        action: () => { onTabChange(targetTab); setSpotlight(false); },
+      });
+    });
+
+    // De-duplicate stocks (old tab search may overlap with universalSearch stocks)
+    const seen = new Set();
+    const deduped = [];
+    for (const item of items.sort((a, b) => b.score - a.score)) {
+      const key = item.id;
+      if (!seen.has(key)) { seen.add(key); deduped.push(item); }
+    }
+    return deduped.slice(0, 20);
   })() : [];
 
   // Keyboard shortcuts: F1-F10, Ctrl+K, Esc
@@ -122,9 +174,14 @@ export default function CommandBar({ onTabChange }) {
     e.preventDefault();
     const cmd = input.trim().toUpperCase();
     const match = tabs.find(t => t.label === cmd || t.id.toUpperCase() === cmd);
-    if (match) onTabChange(match.id);
-    const stock = stocks.find(s => s.ticker.toUpperCase() === cmd);
-    if (stock) onTabChange('equities');
+    if (match) { onTabChange(match.id); setInput(''); return; }
+    // Try asset search for quick navigation
+    universalSearch(input.trim()).then(res => {
+      if (res.length > 0) {
+        const targetTab = TYPE_TAB_MAP[res[0].type] || 'equities';
+        onTabChange(targetTab);
+      }
+    });
     setInput('');
   };
 
@@ -147,7 +204,7 @@ export default function CommandBar({ onTabChange }) {
                 onChange={e => { setSpotlightQuery(e.target.value); setSelectedIndex(0); }}
                 onKeyDown={handleSpotlightKeyDown}
                 className="flex-1 bg-transparent text-bb-white text-[12px] outline-none placeholder-bb-muted font-mono"
-                placeholder="Search tabs, stocks, commands..."
+                placeholder="Search stocks, bonds, ETFs, crypto, indices, FX, commodities..."
                 spellCheck={false}
                 autoComplete="off"
               />
@@ -160,32 +217,28 @@ export default function CommandBar({ onTabChange }) {
                   className={`flex items-center px-3 py-1.5 cursor-pointer border-b border-bb-border/50 ${
                     i === selectedIndex ? 'bg-bb-amber/10' : 'hover:bg-bb-dark'
                   }`}>
-                  <span className={`text-[7px] px-1.5 py-[1px] rounded mr-2 min-w-[35px] text-center ${
-                    r.type === 'tab' ? 'bg-bb-amber/20 text-bb-amber' :
-                    r.type === 'stock' ? 'bg-bb-blue/20 text-bb-blue' :
-                    'bg-bb-cyan/20 text-bb-cyan'
-                  }`}>{r.type.toUpperCase()}</span>
+                  <span className={`text-[7px] px-1.5 py-[1px] rounded mr-2 min-w-[35px] text-center ${TYPE_BADGE[r.type] || 'bg-bb-muted/20 text-bb-muted'}`}>
+                    {r.type.toUpperCase()}
+                  </span>
 
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <span className="text-[11px] font-bold text-bb-white">{r.label}</span>
-                    {r.sublabel && <span className="text-[9px] text-bb-muted ml-2">{r.sublabel}</span>}
+                    {r.sublabel && <span className="text-[9px] text-bb-muted ml-2 truncate">{r.sublabel}</span>}
                   </div>
 
-                  {r.shortcut && <span className="text-[8px] text-bb-muted border border-bb-border px-1 py-[1px]">{r.shortcut}</span>}
-                  {r.price && (
-                    <span className="text-[10px] ml-2">
-                      <span className="text-bb-white">${round(r.price, 2)}</span>
-                      <span className={`ml-1 ${r.changePct >= 0 ? 'positive' : 'negative'}`}>{r.changePct >= 0 ? '+' : ''}{round(r.changePct, 2)}%</span>
-                    </span>
+                  {r.detail && (
+                    <span className="text-[9px] text-bb-muted ml-2 shrink-0">{r.detail}</span>
                   )}
+                  {r.shortcut && <span className="text-[8px] text-bb-muted border border-bb-border px-1 py-[1px] ml-2">{r.shortcut}</span>}
                 </div>
               )) : spotlightQuery.trim() ? (
                 <div className="text-center text-bb-muted text-[10px] py-6">No results for &ldquo;{spotlightQuery}&rdquo;</div>
               ) : (
                 <div className="px-3 py-2 text-[10px] text-bb-muted space-y-1">
-                  <div className="text-bb-amber font-bold mb-1">Quick Commands</div>
+                  <div className="text-bb-amber font-bold mb-1">Universal Search</div>
                   <div>Type a <span className="text-bb-amber">tab name</span> to navigate (e.g. &ldquo;dashboard&rdquo;, &ldquo;equities&rdquo;)</div>
-                  <div>Type a <span className="text-bb-blue">stock ticker</span> to find it (e.g. &ldquo;AAPL&rdquo;, &ldquo;NVDA&rdquo;)</div>
+                  <div>Type a <span className="text-bb-blue">stock ticker</span> (e.g. &ldquo;AAPL&rdquo;, &ldquo;NVDA&rdquo;, &ldquo;2222.SR&rdquo;)</div>
+                  <div>Type a <span className="text-bb-green">bond</span>, <span className="text-bb-cyan">ETF</span>, <span className="text-bb-orange">crypto</span>, <span className="text-bb-yellow">index</span>, or <span className="text-bb-red">commodity</span></div>
                   <div>Type a <span className="text-bb-cyan">command</span> to execute (e.g. &ldquo;settings&rdquo;, &ldquo;alerts&rdquo;)</div>
                   <div className="border-t border-bb-border pt-1 mt-1 text-[9px]">
                     <span className="text-bb-muted">&uarr;&darr;</span> Navigate &nbsp;
@@ -211,7 +264,7 @@ export default function CommandBar({ onTabChange }) {
           value={input}
           onChange={e => setInput(e.target.value)}
           className="flex-1 bg-transparent text-bb-white text-[11px] outline-none placeholder-bb-muted font-mono"
-          placeholder={`Type command or tab name... (${navigator.platform?.includes('Mac') ? '⌘' : 'Ctrl'}+K for search)`}
+          placeholder={`Type command or ticker... (${navigator.platform?.includes('Mac') ? '⌘' : 'Ctrl'}+K for search)`}
           spellCheck={false}
           autoComplete="off"
         />
